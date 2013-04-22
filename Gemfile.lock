@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     webmaster (0.0.0)
+      faraday
       oauth2
       webmaster
 
@@ -62,6 +63,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler
+  faraday
   jeweler
   oauth2
   rdoc

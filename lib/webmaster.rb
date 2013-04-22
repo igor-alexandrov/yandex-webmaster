@@ -1,4 +1,7 @@
-require 'webmaster/helpers'
+require 'webmaster/version'
+require 'webmaster/configuration'
+require 'webmaster/constants'
+
 require 'webmaster/ext'
 
 require 'webmaster/client'
@@ -7,9 +10,17 @@ require 'webmaster/errors'
 require 'oauth2'
 
 module Webmaster
+  extend Configuration
 
   class << self
     attr_accessor :application_id, :application_password
+
+    # Alias for Webmaster::Client.new
+    #
+    # @return [Webmaster::Client]
+    def new(application_id = Webmaster.application_id, application_password = Webmaster.application_password)
+      Webmaster::Client.new(application_id, application_password)
+    end
 
     # config/initializers/webmaster.rb (for instance)
     #
@@ -27,4 +38,6 @@ module Webmaster
       true
     end
   end
+
+  autoload :API, 'webmaster/api'
 end
