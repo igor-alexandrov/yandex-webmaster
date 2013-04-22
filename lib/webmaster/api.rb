@@ -2,13 +2,14 @@
 
 require 'webmaster/configuration'
 
+require 'webmaster/helpers/authorization'
 require 'webmaster/helpers/connection'
 require 'webmaster/helpers/request'
 
 module Webmaster  
   class API
     # include Constants
-    # include Authorization
+    include Helpers::Authorization
     # include MimeType
     include Helpers::Connection
     include Helpers::Request

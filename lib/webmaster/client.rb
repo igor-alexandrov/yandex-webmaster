@@ -1,9 +1,8 @@
 module Webmaster
-  class Client
+  class Client < API
     
-    def initialize(application_id = Webmaster.application_id, application_password = Webmaster.application_password)
-      @application_id = application_id
-      @application_password = application_password
+    def hosts(options={}, &block)
+      @hosts ||= ApiFactory.new('Hosts', current_options.merge(options), &block)
     end
 
   end

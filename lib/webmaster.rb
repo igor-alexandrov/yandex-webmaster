@@ -4,7 +4,6 @@ require 'webmaster/constants'
 
 require 'webmaster/ext'
 
-require 'webmaster/client'
 require 'webmaster/errors'
 
 require 'oauth2'
@@ -13,13 +12,22 @@ module Webmaster
   extend Configuration
 
   class << self
-    attr_accessor :application_id, :application_password
-
     # Alias for Webmaster::Client.new
     #
-    # @return [Webmaster::Client]
-    def new(application_id = Webmaster.application_id, application_password = Webmaster.application_password)
-      Webmaster::Client.new(application_id, application_password)
+    # @return [Github::Client]
+    def new(options = {}, &block)
+      Webmaster::Client.new(options, &block)
+    end
+
+    # Delegate to Webmaster::Client
+    #
+    def method_missing(method, *args, &block)
+      return super unless new.respond_to?(method)
+      new.send(method, *args, &block)
+    end
+
+    def respond_to?(method, include_private = false)
+      new.respond_to?(method, include_private) || super(method, include_private)
     end
 
     # config/initializers/webmaster.rb (for instance)
@@ -40,4 +48,5 @@ module Webmaster
   end
 
   autoload :API, 'webmaster/api'
+  autoload :Client, 'webmaster/client'  
 end

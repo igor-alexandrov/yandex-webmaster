@@ -40,7 +40,7 @@ module Webmaster
     DEFAULT_ENDPOINT = 'https://webmaster.yandex.ru/api/v2/'.freeze
 
     # The web endpoint used to connect to Yandex.Webmaster if none is set
-    DEFAULT_SITE = 'https://webmaster.yandex.ru'.freeze
+    DEFAULT_SITE = 'https://oauth.yandex.ru/'.freeze
 
     # The default SSL configuration
     DEFAULT_SSL = {}
