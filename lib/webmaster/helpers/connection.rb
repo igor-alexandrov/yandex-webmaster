@@ -38,7 +38,7 @@ module Webmaster
         Proc.new do |builder|          
           builder.use Faraday::Request::Multipart
           builder.use Faraday::Request::UrlEncoded
-          builder.use Webmaster::Helpers::OAuth2          
+          builder.use Webmaster::Helpers::OAuth2, self.oauth_token
 
           builder.use Faraday::Response::Logger if ENV['DEBUG']
           

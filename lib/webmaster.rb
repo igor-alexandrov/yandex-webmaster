@@ -1,12 +1,10 @@
 require 'webmaster/version'
 require 'webmaster/configuration'
 require 'webmaster/constants'
-
-require 'webmaster/ext'
-
 require 'webmaster/errors'
 
-require 'oauth2'
+require 'webmaster/core_ext/object'
+require 'webmaster/core_ext/hash'
 
 module Webmaster
   extend Configuration
@@ -48,5 +46,9 @@ module Webmaster
   end
 
   autoload :API, 'webmaster/api'
+  autoload :ApiFactory, 'webmaster/api_factory'
   autoload :Client, 'webmaster/client'  
+  autoload :ResponseWrapper, 'webmaster/response_wrapper'  
+
+  autoload :Host, 'webmaster/host'  
 end

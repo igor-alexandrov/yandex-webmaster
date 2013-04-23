@@ -47,7 +47,7 @@ module Webmaster
             request.body = extract_data_from_params(params) unless params.empty?
           end
         end
-        # ResponseWrapper.new(response, self)
+        ResponseWrapper.new(response, self)
       end
 
       private

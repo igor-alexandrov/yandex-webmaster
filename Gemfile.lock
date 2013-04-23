@@ -63,6 +63,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler
+  crack
   faraday
   jeweler
   oauth2
