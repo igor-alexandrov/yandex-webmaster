@@ -29,6 +29,7 @@ GEM
     json (1.7.7)
     jwt (0.1.8)
       multi_json (>= 1.5)
+    libxml-ruby (2.6.0)
     metaclass (0.0.1)
     mocha (0.13.3)
       metaclass (~> 0.0.1)
@@ -63,9 +64,9 @@ PLATFORMS
 
 DEPENDENCIES
   bundler
-  crack
   faraday
   jeweler
+  libxml-ruby
   oauth2
   rdoc
   shoulda

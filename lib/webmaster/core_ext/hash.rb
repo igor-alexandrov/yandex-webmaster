@@ -68,6 +68,5 @@ class Hash # :nodoc:
       end
     end
     return hash
-  end
-
+  end  
 end # Hash

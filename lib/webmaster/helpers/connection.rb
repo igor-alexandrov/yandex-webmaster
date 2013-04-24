@@ -41,8 +41,9 @@ module Webmaster
           builder.use Webmaster::Helpers::OAuth2, self.oauth_token
 
           builder.use Faraday::Response::Logger if ENV['DEBUG']
+          builder.use Webmaster::Response::Hashify
+          # builder.use Webmaster::Response::RaiseError
           
-          # builder.use Github::Response::RaiseError
           builder.adapter adapter
         end
       end

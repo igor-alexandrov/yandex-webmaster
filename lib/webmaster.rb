@@ -3,8 +3,9 @@ require 'webmaster/configuration'
 require 'webmaster/constants'
 require 'webmaster/errors'
 
-require 'webmaster/core_ext/object'
 require 'webmaster/core_ext/hash'
+require 'webmaster/core_ext/object'
+require 'webmaster/core_ext/string'
 
 module Webmaster
   extend Configuration
@@ -45,10 +46,18 @@ module Webmaster
     end
   end
 
-  autoload :API, 'webmaster/api'
+  autoload :Base, 'webmaster/base'
   autoload :ApiFactory, 'webmaster/api_factory'
   autoload :Client, 'webmaster/client'  
-  autoload :ResponseWrapper, 'webmaster/response_wrapper'  
+  # autoload :ResponseWrapper, 'webmaster/response_wrapper'  
 
-  autoload :Host, 'webmaster/host'  
+  autoload :Host, 'webmaster/host'
+
+  module API
+    autoload :Hosts, 'webmaster/api/hosts'  
+  end
+
+  module Response
+    autoload :Hashify, 'webmaster/response/hashify'  
+  end
 end

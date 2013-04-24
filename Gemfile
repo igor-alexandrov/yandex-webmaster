@@ -2,7 +2,7 @@ source "http://rubygems.org"
 
 gem 'faraday'
 gem 'oauth2'
-gem 'crack'
+gem 'libxml-ruby'
 
 group :development do
   gem "shoulda"

@@ -7,7 +7,7 @@ require 'webmaster/helpers/connection'
 require 'webmaster/helpers/request'
 
 module Webmaster  
-  class API
+  class Base
     # include Constants
     include Helpers::Authorization
     # include MimeType
@@ -30,8 +30,6 @@ module Webmaster
       end
     end
 
-    # Create new API
-    #
     def initialize(options={}, &block)
       setup(options)
       yield_or_eval(&block) if block_given?

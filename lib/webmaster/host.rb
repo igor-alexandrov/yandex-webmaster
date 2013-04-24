@@ -1,42 +1,18 @@
 # encoding: utf-8
 
 module Webmaster
-  class Host < API
+  class Host
 
-    attr_reader :href, :name, :verification, :crawling, :virused, :last_access, :tcy, :url_count, :index_count
+    attr_accessor :href, :name, :verification, :crawling, :virused, :last_access, :tcy, :url_count, :index_count
 
-    def self.from_xml(document)
-
+    def initialize(attributes = {})
+      self.attributes = attributes
     end
 
-    # Lists all the hosts.
-    #
-    # = Examples
-    #
-    #  Webmaster.hosts.list
-    #
-    def list(*args)
-      # arguments(args)
-
-      # get_request("/hosts", arguments.params)
-      get_request("/hosts")
+    def attributes=(attributes = {})
+      attributes.each do |attr,value|
+        self.send("#{attr}=", value) if self.respond_to?("#{attr}=")
+      end
     end
-    alias :all :list
-
-    # Get a host
-    #
-    # = Examples
-    #
-    #  webmaster = Webmaster.new
-    #  webmaster.hosts.get(12341234)
-    #
-    def get(*args)
-      arguments(args, :required => [:user, :repo])
-      params = arguments.params
-
-      get_request("/repos/#{user}/#{repo}", params)
-    end
-    alias :find :get
-
   end
 end
