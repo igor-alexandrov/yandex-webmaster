@@ -1,17 +1,19 @@
-[![Build Status](https://secure.travis-ci.org/igor-alexandrov/webmaster.png)](http://travis-ci.org/igor-alexandrov/webmaster)
 [![Dependency Status](https://gemnasium.com/igor-alexandrov/webmaster.png)](http://gemnasium.com/igor-alexandrov/webmaster)
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/igor-alexandrov/webmaster)
 
 # webmaster
 
-Wrapper for Yandex.Webmaster API [Russian](http://webmaster.yandex.ru/) [English](http://webmaster.yandex.com/). 
+Wrapper for Yandex.Webmaster API. 
+
+**About Yandex.Webmaster**
+
+* [Russian](http://webmaster.yandex.ru/)
+* [English](http://webmaster.yandex.com/)
 
 **API Documentation**
 
 * [Russian](http://api.yandex.ru/webmaster/)
 * [English](http://api.yandex.com/webmaster/)
-
-Inspired by [Wynn Netherland's LinkedIn Gem](https://github.com/pengwynn/linkedin).
 
 ## Installation
 
