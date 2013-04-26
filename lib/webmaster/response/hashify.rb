@@ -44,7 +44,7 @@ module Webmaster
           end
 
           node.each_attr do |attr|
-            result_hash[attr.name.underscore] = attr.value
+            result_hash[attr.name.underscore.to_sym] = attr.value
           end
 
           return result_hash 

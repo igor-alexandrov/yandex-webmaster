@@ -3,6 +3,7 @@ source "http://rubygems.org"
 gem 'faraday'
 gem 'oauth2'
 gem 'libxml-ruby'
+gem 'virtus'
 
 group :development do
   gem "shoulda"

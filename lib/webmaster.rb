@@ -8,14 +8,14 @@ require 'webmaster/core_ext/object'
 require 'webmaster/core_ext/string'
 
 module Webmaster
-  extend Configuration
+  # extend Configuration
 
   class << self
     # Alias for Webmaster::Client.new
     #
     # @return [Github::Client]
     def new(options = {}, &block)
-      Webmaster::Client.new(options, &block)
+      Webmaster::Client.new(:configuration => options, &block)
     end
 
     # Delegate to Webmaster::Client
@@ -49,12 +49,11 @@ module Webmaster
   autoload :Base, 'webmaster/base'
   autoload :ApiFactory, 'webmaster/api_factory'
   autoload :Client, 'webmaster/client'  
-  # autoload :ResponseWrapper, 'webmaster/response_wrapper'  
 
   autoload :Host, 'webmaster/host'
 
-  module API
-    autoload :Hosts, 'webmaster/api/hosts'  
+  module Hosts
+    autoload :Verification, 'webmaster/hosts/verification'
   end
 
   module Response

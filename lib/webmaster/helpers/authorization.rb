@@ -7,10 +7,10 @@ module Webmaster
       attr_accessor :scopes
 
       # Setup OAuth2 instance
-      def client
+      def oauth
         @client ||= ::OAuth2::Client.new(app_id, app_password,
           {
-            :site          => current_options.fetch(:site) { Webmaster.site },
+            :site          => self.configuration.site || Webmaster::Configuration.size,
             :authorize_url => '/authorize',
             :token_url     => '/token',
             :ssl           => { :verify => false }          
@@ -21,32 +21,32 @@ module Webmaster
       # Strategy token
       # 
       def auth_code
-        self.verify_client
-        self.client.auth_code
+        self.verify_oauth
+        self.oauth.auth_code
       end
 
       # Sends authorization request to Yandex.Webmaster.    
       #
       def authorize_url(params = {})
-        self.verify_client
-        self.client.auth_code.authorize_url(params)
+        self.verify_oauth
+        self.oauth.auth_code.authorize_url(params)
       end
 
       # Makes request to token endpoint and retrieves access token value
       def get_token(authorization_code, params = {})
-        self.verify_client
-        self.client.auth_code.get_token(authorization_code, params)
+        self.verify_oauth
+        self.oauth.auth_code.get_token(authorization_code, params)
       end
 
       # Check whether authentication credentials are present
       def authenticated?
-        self.oauth_token?
+        self.configuration.oauth_token?
       end    
 
     protected
 
-      def verify_client # :nodoc:
-        raise ArgumentError, 'Need to provide app_id and app_password' unless app_id? && app_password?
+      def verify_oauth # :nodoc:
+        raise ArgumentError, 'Need to provide app_id and app_password' unless self.configuration.app_id? && self.configuration.app_password?
       end
 
     end

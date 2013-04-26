@@ -21,14 +21,6 @@ module Webmaster
         @app = app
         @token = args.shift
       end
-
-      def query_params(url)
-        if url.query.nil? or url.query.empty?
-          {}
-        else
-          parse_query url.query
-        end
-      end
     end
   end
 end

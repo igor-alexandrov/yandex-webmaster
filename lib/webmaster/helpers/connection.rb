@@ -19,15 +19,15 @@ module Webmaster
         :ssl
       ].freeze
 
-      def default_options(options={})
+      def connection_options(options={})
         {
           :headers => {            
             ACCEPT_CHARSET   => "utf-8",
-            USER_AGENT       => user_agent,
+            USER_AGENT       => self.configuration.user_agent,
             CONTENT_TYPE     => 'application/xml'
           },
-          :ssl => options.fetch(:ssl) { ssl },
-          :url => options.fetch(:endpoint) { Webmaster.endpoint }
+          :ssl => options.fetch(:ssl) { self.configuration.ssl },
+          :url => options.fetch(:endpoint) { self.configuration.endpoint }
         }.merge(options)
       end
 
@@ -38,13 +38,13 @@ module Webmaster
         Proc.new do |builder|          
           builder.use Faraday::Request::Multipart
           builder.use Faraday::Request::UrlEncoded
-          builder.use Webmaster::Helpers::OAuth2, self.oauth_token
+          builder.use Webmaster::Helpers::OAuth2, self.configuration.oauth_token
 
           builder.use Faraday::Response::Logger if ENV['DEBUG']
           builder.use Webmaster::Response::Hashify
           # builder.use Webmaster::Response::RaiseError
           
-          builder.adapter adapter
+          builder.adapter self.configuration.adapter
         end
       end
 
@@ -75,12 +75,12 @@ module Webmaster
 
       # Returns a Fraday::Connection object
       #
-      def connection(options={})
-        conn_options = default_options(options)
-        clear_cache unless options.empty?
-        puts "OPTIONS:#{conn_options.inspect}" if ENV['DEBUG']
+      def connection(options = {})
+        opts = self.connection_options(options)
+        clear_cache unless opts.empty?
+        puts "OPTIONS:#{opts.inspect}" if ENV['DEBUG']
 
-        @connection ||= Faraday.new(conn_options.merge(:builder => stack(options)))
+        @connection ||= Faraday.new(opts.merge(:builder => stack(options)))
       end
 
     end

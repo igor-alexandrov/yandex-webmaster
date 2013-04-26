@@ -1,7 +1,10 @@
 # encoding: utf-8
 
+require 'singleton'
+
 module Webmaster
-  module Configuration
+  class Configuration
+    include Singleton
 
     VALID_OPTIONS_KEYS = [
       :adapter,
@@ -53,25 +56,24 @@ module Webmaster
 
     attr_accessor *VALID_OPTIONS_KEYS
 
-    # Convenience method to allow for global setting of configuration options
-    def configure
-      yield self
+    def initialize
+      super
+      self.reset!
     end
 
-    def self.extended(base)
-      base.reset!
+    def keys
+      VALID_OPTIONS_KEYS
     end
 
-    class << self
-      def keys
-        VALID_OPTIONS_KEYS
-      end
+    def current
+      VALID_OPTIONS_KEYS.inject({}) { |h, k| h[k] = send(k); h }
     end
 
-    def options
-      options = {}
-      VALID_OPTIONS_KEYS.each { |k| options[k] = send(k) }
-      options
+    def setup(options = {})
+      raise ArgumentError if (options.symbolize_keys!.keys - VALID_OPTIONS_KEYS).any?
+      options.each { |k,v| send("#{k}=", v) }        
+
+      self
     end
 
     # Reset configuration options to their defaults
@@ -87,7 +89,23 @@ module Webmaster
       self.user_agent         = DEFAULT_USER_AGENT
       self.connection_options = DEFAULT_CONNECTION_OPTIONS        
       self
+    end      
+
+    # Convenience method to allow for global setting of configuration options
+    def configure
+      yield self
     end
 
+    # Responds to attribute query or attribute clear
+    def method_missing(method, *args, &block) # :nodoc:
+      case method.to_s
+      when /^(.*)\?$/
+        return !!self.send($1.to_s)
+      when /^clear_(.*)$/
+        self.send("#{$1.to_s}=", nil)
+      else
+        super
+      end
+    end
   end
 end

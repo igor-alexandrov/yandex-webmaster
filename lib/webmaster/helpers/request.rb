@@ -32,8 +32,8 @@ module Webmaster
 
         puts "EXECUTED: #{method} - #{path} with #{params} and #{options}" if ENV['DEBUG']
 
-        conn = connection(options.merge(current_options))
-        if conn.path_prefix != '/' && path.index(conn.path_prefix) != 0
+        conn = connection(options)
+        if conn.path_prefix != '/' && path.index(conn.path_prefix) != 0 && !path.start_with?('https://', 'http://')
           path = (conn.path_prefix + path).gsub(/\/(\/)*/, '/')
         end
 
@@ -42,12 +42,15 @@ module Webmaster
           when *(METHODS - METHODS_WITH_BODIES)
             request.body = params.delete('data') if params.has_key?('data')
             request.url(path, params)
-          when *METHODS_WITH_BODIES
-            request.path = path
-            request.body = extract_data_from_params(params) unless params.empty?
+          when *METHODS_WITH_BODIES            
+            request.url(path)            
+            # request.body = extract_data_from_params(params) unless params.empty?
+            request.body = params unless params.empty?
+            request.headers['Content-Length'] = request.body.size.to_s
+
+            puts request
           end
-        end
-        # ResponseWrapper.new(response, self)
+        end        
       end
 
       private

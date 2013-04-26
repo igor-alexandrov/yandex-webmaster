@@ -1,18 +1,49 @@
 # encoding: utf-8
 
 module Webmaster
-  class Host
+  class Host < Base
+    include Virtus
 
-    attr_accessor :href, :name, :verification, :crawling, :virused, :last_access, :tcy, :url_count, :index_count
+    attribute :href, String
+    attribute :name, String
+    attribute :virused, Boolean
+    attribute :last_access, DateTime
+    attribute :tcy, Integer
+    attribute :url_count, Integer
+    attribute :index_count, Integer
 
-    def initialize(attributes = {})
-      self.attributes = attributes
+    attr_accessor :verification, :crawling
+
+    # Get id of the host
+    #
+    def id
+      return @id if defined?(@id)
+      @id = self.href.match(/\/(\d+)\z/)[1].to_i
     end
 
-    def attributes=(attributes = {})
-      attributes.each do |attr,value|
-        self.send("#{attr}=", value) if self.respond_to?("#{attr}=")
+    # Load information about resources that are available for the host
+    # 
+    def resources
+      return @resources if defined?(@resources)
+
+      @resources = self.fetch_value(self.request(:get, self.href), :link).inject({}) do |h, resource|
+        h[resource[:rel].underscore.to_sym] = resource[:href]; h        
       end
     end
+
+    # Load information about verification for the host
+    #
+    def verify
+      self.verification = self.fetch_value(self.request(:get, self.resources[:verify_host]), :verification)
+      self.verification
+    end
+
+    def verification=(value)      
+      @verification = Webmaster::Hosts::Verification.new(value)
+      @verification.configuration = self.configuration
+      @verification
+    end
+
+    
   end
 end

@@ -14,40 +14,51 @@ module Webmaster
     include Helpers::Connection
     include Helpers::Request
 
-    attr_reader *Configuration.keys
+    # attr_reader *Configuration.keys
 
     # attr_accessor *Validations::VALID_API_KEYS
 
-    attr_accessor :current_options
+    attr_accessor :configuration
 
     # Callback to update current configuration options
-    class_eval do
-      Configuration.keys.each do |key|
-        define_method "#{key}=" do |arg|
-          self.instance_variable_set("@#{key}", arg)
-          self.current_options.merge!({:"#{key}" => arg})
-        end
+    # class_eval do
+    #   Configuration.keys.each do |key|
+    #     define_method "#{key}=" do |arg|
+    #       self.instance_variable_set("@#{key}", arg)
+    #       self.current_options.merge!({:"#{key}" => arg})
+    #     end
+    #   end
+    # end
+
+    # def initialize(options={}, &block)
+    #   setup(options)
+    #   yield_or_eval(&block) if block_given?
+    # end
+
+    # def yield_or_eval(&block)
+    #   return unless block
+    #   block.arity > 0 ? yield(self) : self.instance_eval(&block)
+    # end
+
+    def initialize(attributes = {})
+      self.configuration = Webmaster::Configuration.instance.setup(attributes.delete(:configuration) || {})
+      self.attributes = attributes
+    end
+
+    def attributes=(attributes = {})
+      attributes.each do |attr,value|
+        self.send("#{attr}=", value) if self.respond_to?("#{attr}=")
       end
     end
 
-    def initialize(options={}, &block)
-      setup(options)
-      yield_or_eval(&block) if block_given?
-    end
-
-    def yield_or_eval(&block)
-      return unless block
-      block.arity > 0 ? yield(self) : self.instance_eval(&block)
-    end
-
     # Configure options and process basic authorization    
-    def setup(options={})
-      options = Webmaster.options.merge(options)
-      self.current_options = options
-      Configuration.keys.each do |key|
-        send("#{key}=", options[key])
-      end    
-    end
+    # def setup(options={})
+    #   options = Webmaster.options.merge(options)
+    #   self.current_options = options
+    #   Configuration.keys.each do |key|
+    #     send("#{key}=", options[key])
+    #   end    
+    # end
 
     # Responds to attribute query or attribute clear
     def method_missing(method, *args, &block) # :nodoc:
@@ -105,7 +116,7 @@ module Webmaster
       self
     end
 
-    private
+  protected
 
     # Set multiple options
     #
@@ -137,10 +148,23 @@ module Webmaster
       end
     end
 
-    def _merge_mime_type(resource, params) # :nodoc:
-#       params['resource'] = resource
-#       params['mime_type'] = params['mime_type'] || :raw
+    def objects_from_response(klass, response, prefix)        
+      self.objects_from_array(klass, self.fetch_value(response, prefix))
     end
 
+    def fetch_value(response, prefix)
+      response.body[prefix]
+    end
+
+    # @param klass [Class]
+    # @param array [Array]      
+    # @return [Array<Class>]
+    def objects_from_array(klass, array)
+      array.map do |element|
+        instance = klass.new(element)
+        instance.configuration = self.configuration
+        instance
+      end
+    end
   end
 end
