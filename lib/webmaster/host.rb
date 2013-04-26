@@ -10,7 +10,10 @@ module Webmaster
     attribute :last_access, DateTime
     attribute :tcy, Integer
     attribute :url_count, Integer
+    attribute :url_errors, Integer
     attribute :index_count, Integer
+    attribute :internal_links_count, Integer
+    attribute :links_count, Integer
 
     attr_accessor :verification, :crawling
 
@@ -44,6 +47,13 @@ module Webmaster
       @verification
     end
 
+    # Load stats for the host
+    # http://api.yandex.ru/webmaster/doc/dg/reference/hosts-stats.xml
+    #
+    def stats
+      self.attributes = self.request(:get, self.resources[:host_information]).body
+      self
+    end
     
   end
 end

@@ -54,6 +54,7 @@ module Webmaster
 
   module Hosts
     autoload :Verification, 'webmaster/hosts/verification'
+    autoload :Stats, 'webmaster/hosts/stats'
   end
 
   module Response
