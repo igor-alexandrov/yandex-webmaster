@@ -53,7 +53,8 @@ module Webmaster
   autoload :Host, 'webmaster/host'
 
   module Hosts
-    autoload :Verification, 'webmaster/hosts/verification'    
+    autoload :Crawling, 'webmaster/hosts/crawling'
+    autoload :Verification, 'webmaster/hosts/verification'
   end
 
   module Response

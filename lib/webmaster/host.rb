@@ -51,8 +51,15 @@ module Webmaster
       @verification
     end
 
+    def crawling=(value)      
+      @crawling = Webmaster::Hosts::Crawling.new(value)
+      @crawling.configuration = self.configuration
+      @crawling
+    end
+
     # Load stats for the host
-    # http://api.yandex.ru/webmaster/doc/dg/reference/hosts-stats.xml
+    # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/hosts-stats.xml
+    # [EN] http://api.yandex.com/webmaster/doc/dg/reference/hosts-stats.xml
     #
     def stats
       self.attributes = self.request(:get, self.resources[:host_information]).body
@@ -60,7 +67,8 @@ module Webmaster
     end
 
     # Load information about indexed urls for the host
-    # http://api.yandex.ru/webmaster/doc/dg/reference/hosts-indexed.xml
+    # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/hosts-indexed.xml
+    # [EN] http://api.yandex.com/webmaster/doc/dg/reference/hosts-indexed.xml
     #
     def indexed
       self.attributes = self.request(:get, self.resources[:indexed_urls]).body
