@@ -24,7 +24,10 @@ module Webmaster
           :headers => {            
             ACCEPT_CHARSET   => "utf-8",
             USER_AGENT       => self.configuration.user_agent,
-            CONTENT_TYPE     => 'application/xml'
+            # Due to error in Yandex.Webmaster API I had to change this header
+            # http://clubs.ya.ru/webmaster-api/replies.xml?item_no=150
+            # CONTENT_TYPE     => 'application/xml'
+            CONTENT_TYPE     => 'application/x-www-form-urlencoded'
           },
           :ssl => options.fetch(:ssl) { self.configuration.ssl },
           :url => options.fetch(:endpoint) { self.configuration.endpoint }
