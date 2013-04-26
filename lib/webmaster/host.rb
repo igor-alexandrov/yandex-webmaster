@@ -9,9 +9,13 @@ module Webmaster
     attribute :virused, Boolean
     attribute :last_access, DateTime
     attribute :tcy, Integer
+
     attribute :url_count, Integer
     attribute :url_errors, Integer
+
     attribute :index_count, Integer
+    attribute :index_urls, Array
+
     attribute :internal_links_count, Integer
     attribute :links_count, Integer
 
@@ -53,6 +57,18 @@ module Webmaster
     def stats
       self.attributes = self.request(:get, self.resources[:host_information]).body
       self
+    end
+
+    # Load information about indexed urls for the host
+    # http://api.yandex.ru/webmaster/doc/dg/reference/hosts-indexed.xml
+    #
+    def indexed
+      self.attributes = self.request(:get, self.resources[:indexed_urls]).body
+      self
+    end
+
+    def last_week_index_urls=(value)
+      self.index_urls = value
     end
     
   end
