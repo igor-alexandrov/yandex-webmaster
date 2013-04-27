@@ -10,6 +10,21 @@ class Hash # :nodoc:
     copy
   end unless method_defined?(:except!)
 
+  def slice(*keys)
+    keys = keys.map! { |key| convert_key(key) } if respond_to?(:convert_key, true)
+    hash = self.class.new
+    keys.each { |k| hash[k] = self[k] if has_key?(k) }
+    hash
+  end unless method_defined?(:slice)
+
+  def slice!(*keys)
+    keys = keys.map! { |key| convert_key(key) } if respond_to?(:convert_key, true)
+    omit = slice(*self.keys - keys)
+    hash = slice(*keys)
+    replace(hash)
+    omit
+  end unless method_defined?(:slice!)
+
   def symbolize_keys  # :nodoc:
     inject({}) do |hash, (key, value)|
       hash[(key.to_sym rescue key) || key] = value

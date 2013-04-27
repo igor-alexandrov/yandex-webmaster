@@ -3,6 +3,7 @@
 module Webmaster
   module Hosts
     class Verification < Base
+      include Virtus
 
       STATES = [
         'in_progress',
@@ -24,8 +25,6 @@ module Webmaster
         'delegation',
         'whois'
       ]
-
-      include Virtus
 
       attribute :state, String
       attribute :type, String

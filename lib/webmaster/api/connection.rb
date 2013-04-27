@@ -2,14 +2,18 @@
 
 require 'faraday'
 
-require 'webmaster/helpers/oauth2'
-
-
 module Webmaster
-  module Helpers
+  module Api
     module Connection
       extend self
-      include Webmaster::Constants
+
+      USER_AGENT = 'User-Agent'.freeze
+
+      ACCEPT = 'Accept'.freeze
+
+      ACCEPT_CHARSET = 'Accept-Charset'.freeze
+
+      CONTENT_TYPE = 'Content-Type'.freeze
 
       ALLOWED_OPTIONS = [
         :headers,
@@ -19,7 +23,25 @@ module Webmaster
         :ssl
       ].freeze
 
-      def connection_options(options={})
+      # Returns a Fraday::Connection object
+      #
+      def connection(options = {})
+
+        options = self.connection_options(options)
+        
+        if @connection_options != options        
+          @connection = nil
+          @connection_options = options          
+        end
+
+        @connection ||= Faraday.new(@connection_options.merge(:builder => self.stack))
+      end
+
+    protected
+        
+      def connection_options(options = {})
+        options.slice!(*ALLOWED_OPTIONS)
+
         {
           :headers => {            
             ACCEPT_CHARSET   => "utf-8",
@@ -34,14 +56,23 @@ module Webmaster
         }.merge(options)
       end
 
+      # Exposes middleware builder to facilitate custom stacks and easy
+      # addition of new extensions such as cache adapter.
+      #
+      def stack(&block)
+        @stack ||= begin
+          block_given? ? Faraday::Builder.new(&block) : Faraday::Builder.new(&default_middleware)
+        end
+      end
+
       # Default middleware stack that uses default adapter as specified at
       # configuration stage.
       #
-      def default_middleware(options={})
+      def default_middleware
         Proc.new do |builder|          
           builder.use Faraday::Request::Multipart
           builder.use Faraday::Request::UrlEncoded
-          builder.use Webmaster::Helpers::OAuth2, self.configuration.oauth_token
+          builder.use Webmaster::Request::OAuth2, self.configuration.oauth_token
 
           builder.use Faraday::Response::Logger if ENV['DEBUG']
           builder.use Webmaster::Response::Hashify
@@ -49,42 +80,7 @@ module Webmaster
           
           builder.adapter self.configuration.adapter
         end
-      end
-
-      @connection = nil
-
-      @stack = nil
-
-      def clear_cache
-        @connection = nil
-      end
-
-      def caching?
-        !@connection.nil?
-      end
-
-      # Exposes middleware builder to facilitate custom stacks and easy
-      # addition of new extensions such as cache adapter.
-      #
-      def stack(options={}, &block)
-        @stack ||= begin
-          if block_given?
-            Faraday::Builder.new(&block)
-          else
-            Faraday::Builder.new(&default_middleware(options))
-          end
-        end
-      end
-
-      # Returns a Fraday::Connection object
-      #
-      def connection(options = {})
-        opts = self.connection_options(options)
-        clear_cache unless opts.empty?
-        puts "OPTIONS:#{opts.inspect}" if ENV['DEBUG']
-
-        @connection ||= Faraday.new(opts.merge(:builder => stack(options)))
-      end
+      end  
 
     end
   end

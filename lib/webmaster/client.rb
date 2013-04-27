@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Webmaster
   class Client < Base
     def hosts(reload = false)      

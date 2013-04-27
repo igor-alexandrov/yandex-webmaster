@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Webmaster
   module Errors
     class WebmasterError < StandardError

@@ -42,7 +42,7 @@ module Webmaster
     #
     def verify
       self.verification = self.fetch_value(self.request(:get, self.resources[:verify_host]), :verification)
-      self.verification
+      self
     end
 
     def verification=(value)      

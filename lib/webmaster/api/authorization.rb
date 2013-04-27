@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 module Webmaster
-  module Helpers
+  module Api
     module Authorization
 
       attr_accessor :scopes

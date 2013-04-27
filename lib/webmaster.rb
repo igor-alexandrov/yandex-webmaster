@@ -1,6 +1,5 @@
 require 'webmaster/version'
 require 'webmaster/configuration'
-require 'webmaster/constants'
 require 'webmaster/errors'
 
 require 'webmaster/core_ext/hash'
@@ -55,6 +54,10 @@ module Webmaster
   module Hosts
     autoload :Crawling, 'webmaster/hosts/crawling'
     autoload :Verification, 'webmaster/hosts/verification'
+  end
+
+  module Request
+    autoload :OAuth2, 'webmaster/request/oauth2'  
   end
 
   module Response

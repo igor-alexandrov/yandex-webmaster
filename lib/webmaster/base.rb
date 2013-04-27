@@ -2,43 +2,17 @@
 
 require 'webmaster/configuration'
 
-require 'webmaster/helpers/authorization'
-require 'webmaster/helpers/connection'
-require 'webmaster/helpers/request'
+require 'webmaster/api/authorization'
+require 'webmaster/api/connection'
+require 'webmaster/api/request'
 
-module Webmaster  
+module Webmaster
   class Base
-    # include Constants
-    include Helpers::Authorization
-    # include MimeType
-    include Helpers::Connection
-    include Helpers::Request
-
-    # attr_reader *Configuration.keys
-
-    # attr_accessor *Validations::VALID_API_KEYS
+    include Api::Authorization
+    include Api::Connection
+    include Api::Request
 
     attr_accessor :configuration
-
-    # Callback to update current configuration options
-    # class_eval do
-    #   Configuration.keys.each do |key|
-    #     define_method "#{key}=" do |arg|
-    #       self.instance_variable_set("@#{key}", arg)
-    #       self.current_options.merge!({:"#{key}" => arg})
-    #     end
-    #   end
-    # end
-
-    # def initialize(options={}, &block)
-    #   setup(options)
-    #   yield_or_eval(&block) if block_given?
-    # end
-
-    # def yield_or_eval(&block)
-    #   return unless block
-    #   block.arity > 0 ? yield(self) : self.instance_eval(&block)
-    # end
 
     def initialize(attributes = {})
       self.configuration = Webmaster::Configuration.instance.setup(attributes.delete(:configuration) || {})

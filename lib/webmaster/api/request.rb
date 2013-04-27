@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 module Webmaster
-  module Helpers
+  module Api
 
     # Defines HTTP verbs
     module Request
@@ -44,27 +44,18 @@ module Webmaster
             request.url(path, params)
           when *METHODS_WITH_BODIES            
             request.url(path)            
-            # request.body = extract_data_from_params(params) unless params.empty?
-            request.body = params unless params.empty?
+            request.body = self.extract_data_from_params(params) unless params.empty?            
             request.headers['Content-Length'] = request.body.size.to_s
-
-            puts request
           end
         end        
       end
 
-      private
+    protected
 
       def extract_data_from_params(params) # :nodoc:
-        return params['data'] if params.has_key?('data') and !params['data'].nil?
+        return params['data'] if params.is_a?(Hash) && params.has_key?('data') && !params['data'].nil?
         return params
       end
-
-      def _extract_mime_type(params, options) # :nodoc:
-        options['resource']  = params['resource'] ? params.delete('resource') : ''
-        options['mime_type'] = params['resource'] ? params.delete('mime_type') : ''
-      end
-
     end
   end
 end

@@ -5,35 +5,36 @@
 
 Gem::Specification.new do |s|
   s.name = "webmaster"
-  s.version = "0.0.0"
+  s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Igor Alexandrov"]
-  s.date = "2013-04-22"
+  s.date = "2013-04-27"
   s.email = "igor.alexandrov@gmail.com"
   s.extra_rdoc_files = [
     "LICENSE.txt",
-    "README.rdoc"
+    "README.md"
   ]
   s.files = [
     ".document",
     "Gemfile",
     "Gemfile.lock",
     "LICENSE.txt",
-    "README.rdoc",
+    "README.md",
     "Rakefile",
-    "VERSION",
     "lib/webmaster.rb",
-    "lib/webmaster/api.rb",
+    "lib/webmaster/base.rb",
     "lib/webmaster/client.rb",
+    "lib/webmaster/configuration.rb",
+    "lib/webmaster/core_ext/hash.rb",
+    "lib/webmaster/core_ext/object.rb",
+    "lib/webmaster/core_ext/string.rb",
     "lib/webmaster/errors.rb",
-    "lib/webmaster/ext.rb",
-    "lib/webmaster/helpers.rb",
-    "lib/webmaster/helpers/authorization.rb",
-    "lib/webmaster/helpers/configuration.rb",
-    "lib/webmaster/helpers/connection.rb",
-    "lib/webmaster/helpers/request.rb",
     "lib/webmaster/host.rb",
+    "lib/webmaster/hosts/crawling.rb",
+    "lib/webmaster/hosts/verification.rb",
+    "lib/webmaster/response/hashify.rb",
+    "lib/webmaster/version.rb",
     "test/helper.rb",
     "test/test_webmaster.rb",
     "webmaster.gemspec"
@@ -50,7 +51,13 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<faraday>, [">= 0"])
       s.add_runtime_dependency(%q<oauth2>, [">= 0"])
+      s.add_runtime_dependency(%q<libxml-ruby>, [">= 0"])
+      s.add_runtime_dependency(%q<virtus>, [">= 0"])
       s.add_runtime_dependency(%q<webmaster>, [">= 0"])
+      s.add_development_dependency(%q<shoulda>, [">= 0"])
+      s.add_development_dependency(%q<rdoc>, [">= 0"])
+      s.add_development_dependency(%q<bundler>, [">= 0"])
+      s.add_development_dependency(%q<jeweler>, [">= 0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<rdoc>, [">= 0"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
@@ -86,7 +93,13 @@ Gem::Specification.new do |s|
     else
       s.add_dependency(%q<faraday>, [">= 0"])
       s.add_dependency(%q<oauth2>, [">= 0"])
+      s.add_dependency(%q<libxml-ruby>, [">= 0"])
+      s.add_dependency(%q<virtus>, [">= 0"])
       s.add_dependency(%q<webmaster>, [">= 0"])
+      s.add_dependency(%q<shoulda>, [">= 0"])
+      s.add_dependency(%q<rdoc>, [">= 0"])
+      s.add_dependency(%q<bundler>, [">= 0"])
+      s.add_dependency(%q<jeweler>, [">= 0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<rdoc>, [">= 0"])
       s.add_dependency(%q<bundler>, [">= 0"])
@@ -123,7 +136,13 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<faraday>, [">= 0"])
     s.add_dependency(%q<oauth2>, [">= 0"])
+    s.add_dependency(%q<libxml-ruby>, [">= 0"])
+    s.add_dependency(%q<virtus>, [">= 0"])
     s.add_dependency(%q<webmaster>, [">= 0"])
+    s.add_dependency(%q<shoulda>, [">= 0"])
+    s.add_dependency(%q<rdoc>, [">= 0"])
+    s.add_dependency(%q<bundler>, [">= 0"])
+    s.add_dependency(%q<jeweler>, [">= 0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<rdoc>, [">= 0"])
     s.add_dependency(%q<bundler>, [">= 0"])

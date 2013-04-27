@@ -3,14 +3,13 @@
 module Webmaster
   module Hosts
     class Crawling < Base
+      include Virtus
 
       STATES = [
         'indexed',
         'not_indexed',
         'waiting'
       ]
-
-      include Virtus
 
       attribute :state, String
 

@@ -1,9 +1,11 @@
 PATH
   remote: .
   specs:
-    webmaster (0.0.0)
+    webmaster (0.0.1)
       faraday
+      libxml-ruby
       oauth2
+      virtus
       webmaster
 
 GEM

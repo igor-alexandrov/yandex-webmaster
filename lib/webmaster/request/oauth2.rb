@@ -3,10 +3,10 @@
 require 'faraday'
 
 module Webmaster
-  module Helpers
+  module Request
     class OAuth2 < Faraday::Middleware
       
-      AUTH_HEADER  = 'Authorization'.freeze
+      AUTH_HEADER = 'Authorization'.freeze
 
       dependency 'oauth2'
 
