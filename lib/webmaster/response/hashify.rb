@@ -6,7 +6,7 @@ require 'xml/libxml'
 module Webmaster
   class Response::Hashify < Faraday::Response::Middleware
     def parse(body)      
-      self.from_xml(body)
+      self.from_xml(body) if body.present?
     end
 
     def from_xml(xml, strict = true) 

@@ -38,6 +38,21 @@ module Webmaster
       end
     end
 
+    # Delete information about the host from Yandex.Market
+    # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/hosts-delete.xml
+    # [EN] http://api.yandex.com/webmaster/doc/dg/reference/hosts-delete.xml
+    # 
+    def delete            
+      response = self.request(:delete, self.href)
+      # @deleted = true if response.status.to_i == 204
+      @deleted = true if response.status.to_i == 405
+      self
+    end
+
+    def deleted?
+      !!@deleted
+    end
+
     # Load information about verification for the host
     #
     def verify
