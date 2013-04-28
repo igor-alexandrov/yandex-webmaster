@@ -12,6 +12,10 @@ group :development do
   gem "jeweler"
 end
 
+group :documentation do
+  gem "yard"
+end
+
 group :test do
   gem 'vcr'
   gem 'webmock'

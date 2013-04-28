@@ -25,6 +25,20 @@ module Webmaster
       end
     end
 
+    def inspect
+      inspection = if self.respond_to?(:attributes) && self.attributes.any?
+        self.attributes.collect { |attribute, value|
+          "#{attribute}: #{value}" if value.present?
+        }.compact.join(', ')
+      else
+        self.instance_variables.map{ |variable|
+          "#{variable}: #{instance_variable_get(variable).inspect}"
+        }.compact.join(', ')
+      end
+
+      "#<#{self.class} #{inspection}>"
+    end
+
     # Configure options and process basic authorization    
     # def setup(options={})
     #   options = Webmaster.options.merge(options)
@@ -134,9 +148,10 @@ module Webmaster
     # @param array [Array]      
     # @return [Array<Class>]
     def objects_from_array(klass, array)
-      array.map do |element|
-        instance = klass.new(element)
+      array.map do |attributes|
+        instance = klass.new
         instance.configuration = self.configuration
+        instance.attributes = attributes
         instance
       end
     end

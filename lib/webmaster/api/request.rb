@@ -54,6 +54,7 @@ module Webmaster
 
       def extract_data_from_params(params) # :nodoc:
         return params['data'] if params.is_a?(Hash) && params.has_key?('data') && !params['data'].nil?
+        return params[:data] if params.is_a?(Hash) && params.has_key?(:data) && !params[:data].nil?
         return params
       end
     end

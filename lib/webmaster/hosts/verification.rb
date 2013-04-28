@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'xml/libxml'
+
 module Webmaster
   module Hosts
     class Verification < Base
@@ -11,26 +13,55 @@ module Webmaster
         'verification_failed',
         'verified',
         'waiting'
-      ]
+      ].freeze
 
-      TYPES = [
-        'auto',
+      CHECKABLE_TYPES = [        
         'dns_record',
-        'html_file',
-        'manual',
-        'meta_tag',
-        'pdd',
+        'html_file',        
+        'meta_tag',        
         'txt_file',
-        'pdd_external',
-        'delegation',
         'whois'
-      ]
+      ].freeze
+
+      NON_CHECKABLE_TYPES = [
+        'auto',
+        'manual',        
+        'pdd',        
+        'pdd_external',
+        'delegation'        
+      ].freeze
+
+      TYPES = (CHECKABLE_TYPES + NON_CHECKABLE_TYPES).flatten.freeze
 
       attribute :state, String
       attribute :type, String
       
       attribute :possible_to_cancel, Boolean
-      attribute :date, Date      
+      attribute :date, Date
+      attribute :uin, String
+
+      attr_accessor :host
+
+      def initialize(attributes = {})
+        super(attributes)
+
+        self.state ||= 'never_verified'
+      end
+
+      # @return [Boolean]
+      # 
+      def verified?
+        self.state == 'verified'
+      end
+
+      def run(type)
+        raise ArgumentError if !CHECKABLE_TYPES.include?(type.underscore.downcase)
+
+        # data = XML::Document.string("<host><type>#{type.underscore.upcase}</type></host>").to_s
+        data = "<host><type>#{type.underscore.upcase}</type></host>"
+        response = self.request(:put, self.host.resources[:verify_host], :data => data)
+        # return true if response.status.to_i == 204
+      end
 
       def state=(value)
         value = value.downcase.underscore

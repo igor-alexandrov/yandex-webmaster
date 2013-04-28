@@ -16,5 +16,6 @@ module Webmaster
     class AccessDeniedError      < WebmasterError; end
     class NoTokenError           < WebmasterError; end
     class NotFoundError          < WebmasterError; end
+    class ResourceError          < WebmasterError; end
   end
 end

@@ -9,9 +9,11 @@ module Webmaster
         'indexed',
         'not_indexed',
         'waiting'
-      ]
+      ].freeze
 
       attribute :state, String
+
+      attr_accessor :host
 
       def state=(value)
         value = value.downcase.underscore
