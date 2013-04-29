@@ -9,7 +9,12 @@ module Webmaster
 
     def create_host(name)
       xml = "<host><name>#{name}</name></host>"
-      self.request(:post, '/hosts', xml)
+      response = self.request(:post, '/hosts', xml)
+      if response.status.to_i == 201
+        host = Webmaster::Host.new(:href => response.headers['Location'])
+        host.configuration = self.configuration
+        return host
+      end
     end
   end
 end

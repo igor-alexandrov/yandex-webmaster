@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    webmaster (0.0.1)
+    webmaster (0.1.0)
       faraday
       libxml-ruby
       oauth2
