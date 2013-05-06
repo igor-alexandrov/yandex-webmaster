@@ -43,7 +43,7 @@ module Webmaster
     attr_accessor :configuration
 
     def initialize(attributes = {})
-      self.configuration = Webmaster::Configuration.instance.setup(attributes.delete(:configuration) || {})
+      self.configuration ||= Webmaster::Configuration.new.setup(attributes.delete(:configuration) || {})
       self.attributes = attributes
     end
 

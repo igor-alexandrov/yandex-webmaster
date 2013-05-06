@@ -4,8 +4,6 @@ require 'singleton'
 
 module Webmaster
   class Configuration
-    include Singleton
-
     VALID_OPTIONS_KEYS = [
       :adapter,
       :app_id,
@@ -29,15 +27,6 @@ module Webmaster
 
     # By default, don't set a user oauth access token
     DEFAULT_OAUTH_TOKEN = nil
-
-    # By default, don't set a user login name
-    DEFAULT_LOGIN = nil
-
-    # By default, don't set a user password
-    DEFAULT_PASSWORD = nil
-
-    # By default, don't set a user basic authentication
-    DEFAULT_BASIC_AUTH = nil
 
     # The api endpoint used to connect to Yandex.Webmaster if none is set
     DEFAULT_ENDPOINT = 'https://webmaster.yandex.ru/api/v2/'.freeze

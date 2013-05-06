@@ -9,7 +9,11 @@ module Webmaster
         'waiting'
       ].freeze
 
-      attr_accessor :host, :state
+      define_attributes :as => 'api_attributes' do        
+        attr :state, String, :writer => :protected      
+      end
+
+      attr_accessor :host
 
       def state=(value)
         value = value.downcase.underscore

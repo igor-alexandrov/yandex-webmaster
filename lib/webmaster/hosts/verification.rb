@@ -30,9 +30,17 @@ module Webmaster
         'delegation'        
       ].freeze
 
-      TYPES = (CHECKABLE_TYPES + NON_CHECKABLE_TYPES).flatten.freeze
+      TYPES = (CHECKABLE_TYPES + NON_CHECKABLE_TYPES).flatten.freeze      
 
-      attr_accessor :host, :state, :type, :possible_to_cancel, :date, :uin
+      define_attributes :as => 'api_attributes' do        
+        attr :state, String, :writer => :protected
+        attr :type, String, :writer => :protected
+        attr :possible_to_cancel, Boolean, :writer => :protected
+        attr :date, Date, :writer => :protected
+        attr :uin, String, :writer => :protected
+      end
+
+      attr_accessor :host
 
       def initialize(attributes = {})
         super(attributes)
@@ -55,6 +63,8 @@ module Webmaster
         # return true if response.status.to_i == 204
       end
 
+    protected
+      
       def state=(value)
         value = value.downcase.underscore
         @state = value if STATES.include?(value)

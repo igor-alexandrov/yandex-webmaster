@@ -7,7 +7,7 @@ module Webmaster
     extend Forwardable
     
     define_attributes :as => 'api_attributes' do
-      attr :href, String, :writer => { :visibility => :protected }, :reader => {:name => 'super_href'}, :instance_variable_name => 'my_href'
+      attr :href, String, :writer => :protected
       attr :name, String, :writer => :protected
       attr :virused, Boolean, :writer => :protected
       attr :last_access, DateTime, :writer => :protected
