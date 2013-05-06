@@ -5,26 +5,30 @@ require 'forwardable'
 module Webmaster
   class Host < Base
     extend Forwardable
-    include Virtus
-
-    attribute :href, String
-    attribute :name, String
-    attribute :virused, Boolean
-    attribute :last_access, DateTime
-    attribute :tcy, Integer
-
-    attribute :url_count, Integer
-    attribute :url_errors, Integer
-
-    attribute :index_count, Integer
-    attribute :last_week_index_urls, Array
-
-    attribute :internal_links_count, Integer
     
-    attribute :links_count, Integer
-    attribute :last_week_links, Array
+    define_attributes :as => 'api_attributes' do
+      attr :href, String, :writer => { :visibility => :protected }, :reader => {:name => 'super_href'}, :instance_variable_name => 'my_href'
+      attr :name, String, :writer => :protected
+      attr :virused, Boolean, :writer => :protected
+      attr :last_access, DateTime, :writer => :protected
+      attr :tcy, Integer, :writer => :protected
 
-    attr_reader :crawling
+      attr :url_count, Integer, :writer => :protected
+      attr :url_errors, Integer, :writer => :protected
+
+      attr :index_count, Integer, :writer => :protected
+      attr :last_week_index_urls, Array, :writer => :protected
+
+      attr :internal_links_count, Integer, :writer => :protected
+
+      attr :links_count, Integer, :writer => :protected
+      attr :last_week_links, Array, :writer => :protected
+
+      attr :total_shows_count, Integer, :writer => :protected
+      attr :top_shows_percent, Float, :writer => :protected
+    end
+
+    attr_reader :crawling, :top_shows
 
     delegate :verified? => :verification
 
@@ -126,6 +130,19 @@ module Webmaster
       self
     end
 
+    # Load information about top queries for the host
+    # @return [Webmaster::Host]
+    # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/host-tops.xml
+    # [EN] http://api.yandex.com/webmaster/doc/dg/reference/host-tops.xml
+    #
+    def top_queries
+      self.validate_resource!(:top_queries)
+
+      self.attributes = self.fetch_value(self.request(:get, self.resources[:top_queries]), :top_queries)
+      self
+      # self.fetch_value(self.request(:get, self.resources[:top_queries]), :top_queries)
+    end
+
   protected
 
     def validate_resource!(resource)
@@ -133,8 +150,6 @@ module Webmaster
         raise Webmaster::Errors::ResourceError.new("Resource '#{resource.to_s}' is not available for the host")
       end
     end
-
-  private
 
     def verification=(value)      
       @verification = value.is_a?(Webmaster::Hosts::Verification) ? value : Webmaster::Hosts::Verification.new(value)
@@ -149,6 +164,12 @@ module Webmaster
       @crawling.configuration = self.configuration
       @crawling
     end
+
+    def top_shows=(value)
+      array = value.is_a?(Hash) ? value[:top_info] : value
+      @top_shows = self.objects_from_array(Webmaster::Hosts::TopInfo, array)
+    end
+
 
   end
 end

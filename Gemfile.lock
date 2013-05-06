@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    webmaster (0.1.0)
+    webmaster (0.1.1)
       faraday
       libxml-ruby
       oauth2
@@ -79,7 +79,6 @@ DEPENDENCIES
   rdoc
   shoulda
   vcr
-  virtus
   webmaster!
   webmock
   yard

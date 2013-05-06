@@ -29,16 +29,14 @@ module Webmaster
             result = xml_node_to_hash(child) 
 
             if child.name == "text"
-              if !child.next? and !child.prev?
-                return result
-              end
-            elsif result_hash[child.name.underscore.to_sym]
+              return result if !child.next? && !child.prev? && result.present?              
+            elsif result_hash[child.name.underscore.to_sym] && result.present?
               if result_hash[child.name.underscore.to_sym].is_a?(Object::Array)
                 result_hash[child.name.underscore.to_sym] << result
               else
-                result_hash[child.name.underscore.to_sym] = [result_hash[child.name.to_sym]] << result
+                result_hash[child.name.underscore.to_sym] = [result_hash[child.name.underscore.to_sym]] << result
               end
-            else 
+            elsif result.present?
               result_hash[child.name.underscore.to_sym] = result
             end
           end

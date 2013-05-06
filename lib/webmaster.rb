@@ -2,7 +2,12 @@ require 'webmaster/version'
 require 'webmaster/configuration'
 require 'webmaster/errors'
 
+require 'webmaster/core_ext/array'
+require 'webmaster/core_ext/class'
+require 'webmaster/core_ext/date'
+require 'webmaster/core_ext/date_time'
 require 'webmaster/core_ext/hash'
+require 'webmaster/core_ext/nil_class'
 require 'webmaster/core_ext/object'
 require 'webmaster/core_ext/string'
 
@@ -50,9 +55,10 @@ module Webmaster
   autoload :Client, 'webmaster/client'  
 
   autoload :Host, 'webmaster/host'
-
+  
   module Hosts
     autoload :Crawling, 'webmaster/hosts/crawling'
+    autoload :TopInfo, 'webmaster/hosts/top_info'
     autoload :Verification, 'webmaster/hosts/verification'
   end
 
@@ -62,5 +68,10 @@ module Webmaster
 
   module Response
     autoload :Hashify, 'webmaster/response/hashify'  
+  end
+
+  module Api
+    autoload :AttributesBuilder, 'webmaster/api/attributes_builder'
+    autoload :Attributes, 'webmaster/api/attributes' 
   end
 end

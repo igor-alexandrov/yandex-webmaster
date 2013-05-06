@@ -5,8 +5,7 @@ require 'xml/libxml'
 module Webmaster
   module Hosts
     class Verification < Base
-      include Virtus
-
+    
       STATES = [
         'in_progress',
         'never_verified',
@@ -33,14 +32,7 @@ module Webmaster
 
       TYPES = (CHECKABLE_TYPES + NON_CHECKABLE_TYPES).flatten.freeze
 
-      attribute :state, String
-      attribute :type, String
-      
-      attribute :possible_to_cancel, Boolean
-      attribute :date, Date
-      attribute :uin, String
-
-      attr_accessor :host
+      attr_accessor :host, :state, :type, :possible_to_cancel, :date, :uin
 
       def initialize(attributes = {})
         super(attributes)
@@ -55,10 +47,10 @@ module Webmaster
       end
 
       def run(type)
-        raise ArgumentError if !CHECKABLE_TYPES.include?(type.underscore.downcase)
+        raise ArgumentError if !CHECKABLE_TYPES.include?(type.to_s.underscore.downcase)
 
         # data = XML::Document.string("<host><type>#{type.underscore.upcase}</type></host>").to_s
-        data = "<host><type>#{type.underscore.upcase}</type></host>"
+        data = "<host><type>#{type.to_s.underscore.upcase}</type></host>"
         response = self.request(:put, self.host.resources[:verify_host], :data => data)
         # return true if response.status.to_i == 204
       end

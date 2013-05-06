@@ -49,6 +49,10 @@ class Hash # :nodoc:
     return hash
   end unless method_defined?(:symbolize_keys!)
 
+  def extractable_options?
+    instance_of?(Hash)
+  end unless method_defined?(:extractable_options?)
+
   def serialize # :nodoc:
     self.map { |key, val| [key, val].join("=") }.join("&")
   end unless method_defined?(:serialize)

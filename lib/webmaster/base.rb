@@ -12,6 +12,34 @@ module Webmaster
     include Api::Connection
     include Api::Request
 
+    class << self
+      def define_attributes(options = {}, &block)
+        options[:as] ||= :attributes        
+        
+        cattr_accessor options[:as].to_sym
+        class_eval(<<-EOS, __FILE__, __LINE__ + 1)          
+          @@#{options[:as].to_s} ||= []
+        EOS
+
+        unless options[:inspect] == false          
+          define_method(:inspect) do
+            inspection = self.send(options[:as].to_s).map { |attribute|
+              value = self.instance_variable_get("@#{attribute.to_s}")
+              value.present? ? "#{attribute}: #{value}" : "#{attribute}: nil"
+            }.compact.join(', ')
+
+            "#<#{self.class} #{inspection}>"
+          end
+        end
+
+        Webmaster::Api::AttributesBuilder.new(self, options, &block)
+      end
+
+      def const_missing(name)
+        Webmaster::Api::AttributesBuilder.determine_type(name) || super
+      end
+    end
+
     attr_accessor :configuration
 
     def initialize(attributes = {})
@@ -25,19 +53,7 @@ module Webmaster
       end
     end
 
-    def inspect
-      inspection = if self.respond_to?(:attributes) && self.attributes.any?
-        self.attributes.collect { |attribute, value|
-          "#{attribute}: #{value}" if value.present?
-        }.compact.join(', ')
-      else
-        self.instance_variables.map{ |variable|
-          "#{variable}: #{instance_variable_get(variable).inspect}"
-        }.compact.join(', ')
-      end
 
-      "#<#{self.class} #{inspection}>"
-    end
 
     # Configure options and process basic authorization    
     # def setup(options={})
