@@ -21,8 +21,16 @@ module Webmaster
           raise NotImplementedError
         end
 
-        def define
+        def define_method
           raise NotImplementedError
+        end
+
+        def define_aliases          
+          if self.type.respond_to?("default_#{self.accessor.to_s}_aliases")
+            self.type.send("default_#{self.accessor.to_s}_aliases", self.method_name).each do |alias_method_name|
+              self.object.send(:alias_method, alias_method_name, self.method_name)
+            end
+          end
         end
 
         def method_visibility_from_options

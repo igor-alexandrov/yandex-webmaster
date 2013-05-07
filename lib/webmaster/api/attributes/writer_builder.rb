@@ -13,7 +13,7 @@ module Webmaster
           self.method_name_from_options || "#{self.attribute_name}="
         end
 
-        def define
+        def define_method
           unless self.object.method_defined?(self.method_name)
             self.object.class_eval(<<-EOS, __FILE__, __LINE__ + 1)              
               def #{self.method_name}(value)

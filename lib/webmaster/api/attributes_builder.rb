@@ -18,10 +18,12 @@ module Webmaster
         type = self.class.determine_type(options.delete(:type) || args[1])
         attribute_name = args[0].to_s
 
-        reader_builder = Webmaster::Api::Attributes::ReaderBuilder.new(@object, attribute_name, type, options).define
-        writer_builder = Webmaster::Api::Attributes::WriterBuilder.new(@object, attribute_name, type, options).define
+        reader_builder = Webmaster::Api::Attributes::ReaderBuilder.new(@object, attribute_name, type, options)
+        writer_builder = Webmaster::Api::Attributes::WriterBuilder.new(@object, attribute_name, type, options)
+        self.add_attribute(attribute_name, reader_builder, writer_builder)
 
-        self.add_attribute(attribute_name, reader_builder, writer_builder)          
+        reader_builder.define_method.define_aliases
+        writer_builder.define_method.define_aliases        
       end
 
     protected
