@@ -16,22 +16,12 @@ module Webmaster
         options = args.extract_options!
 
         type = self.class.determine_type(options.delete(:type) || args[1])
-        attribute_name = args[0]
+        attribute_name = args[0].to_s
 
-        Webmaster::Api::Attributes::ReaderBuilder.new(@object, attribute_name, type, options).define
-        Webmaster::Api::Attributes::WriterBuilder.new(@object, attribute_name, type, options).define
+        reader_builder = Webmaster::Api::Attributes::ReaderBuilder.new(@object, attribute_name, type, options).define
+        writer_builder = Webmaster::Api::Attributes::WriterBuilder.new(@object, attribute_name, type, options).define
 
-        # reader_name = options.delete(:reader_name) || args[0]
-        # writer_name = options.delete(:writer_name) || "#{args[0]}="
-        # instance_variable_name = options.delete(:instance_variable_name) || "@#{args[0]}"
-
-        self.add_attribute(args[0])
-
-        # self.define_reader(reader_name, instance_variable_name)
-        # self.define_reader_aliases(reader_name, type)
-
-        # self.define_writer(writer_name, instance_variable_name, type)
-        # self.define_writer_aliases(writer_name, type)
+        self.add_attribute(attribute_name, reader_builder, writer_builder)          
       end
 
     protected
@@ -60,42 +50,29 @@ module Webmaster
         end
       end
 
-      def add_attribute(attribute_name)
-        @object.send(self.options[:as]) << attribute_name.to_sym
+      def add_attribute(attribute_name, reader_builder, writer_builder)        
+        @object.send(self.options[:as])[attribute_name.to_sym] = {
+          :reader_name => reader_builder.method_name,
+          :writer_name => writer_builder.method_name,
+          :instance_variable_name => writer_builder.instance_variable_name
+        }      
       end      
 
-      def define_reader(method_name, instance_variable_name)
-        unless @object.method_defined?(method_name)
-          @object.send :define_method, method_name do
-            instance_variable_get(instance_variable_name)
-          end
-        end
-      end
+      # def define_reader_aliases(method_name, klass)
+      #   if klass.respond_to?(:default_reader_aliases)
+      #     klass.default_reader_aliases(method_name).each do |alias_method_name|
+      #       @object.send(:alias_method, alias_method_name, method_name)
+      #     end
+      #   end
+      # end
 
-      def define_reader_aliases(method_name, klass)
-        if klass.respond_to?(:default_reader_aliases)
-          klass.default_reader_aliases(method_name).each do |alias_method_name|
-            @object.send(:alias_method, alias_method_name, method_name)
-          end
-        end
-      end
-
-      def define_writer(method_name, instance_variable_name, klass)
-        unless @object.method_defined?(method_name)
-          @object.send :define_method, method_name do |value|
-            value = klass.respond_to?(:typecast) ? klass.typecast(value) : klass.new(value)
-            instance_variable_set(instance_variable_name, value)
-          end          
-        end
-      end
-
-      def define_writer_aliases(method_name, klass)
-        if klass.respond_to?(:default_writer_aliases)
-          klass.default_writer_aliases(method_name).each do |alias_method_name|
-            @object.send(:alias_method, alias_method_name, method_name)
-          end
-        end
-      end
+      # def define_writer_aliases(method_name, klass)
+      #   if klass.respond_to?(:default_writer_aliases)
+      #     klass.default_writer_aliases(method_name).each do |alias_method_name|
+      #       @object.send(:alias_method, alias_method_name, method_name)
+      #     end
+      #   end
+      # end
     end
   end
 end

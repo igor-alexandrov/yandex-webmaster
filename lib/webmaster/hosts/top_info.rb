@@ -1,7 +1,15 @@
 module Webmaster
   module Hosts
     class TopInfo < Base  
-      attr_accessor :host, :query, :count, :position, :is_custom
+
+      define_attributes :as => 'api_attributes' do        
+        attr :query, String, :writer => :protected
+        attr :count, Integer, :writer => :protected
+        attr :position, Integer, :writer => :protected
+        attr :is_custom, Boolean, :writer => :protected        
+      end
+
+      attr_accessor :host      
     end
   end
 end

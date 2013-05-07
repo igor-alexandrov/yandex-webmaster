@@ -22,7 +22,8 @@ module Webmaster
               end
             EOS
 
-            self.object.send self.method_visibility, self.method_name        
+            self.object.send self.method_visibility, self.method_name
+            self
           end        
         end
       end

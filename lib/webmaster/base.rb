@@ -18,18 +18,28 @@ module Webmaster
         
         cattr_accessor options[:as].to_sym
         class_eval(<<-EOS, __FILE__, __LINE__ + 1)          
-          @@#{options[:as].to_s} ||= []
+          @@#{options[:as].to_s} ||= {}
         EOS
 
         unless options[:inspect] == false          
           define_method(:inspect) do
-            inspection = self.send(options[:as].to_s).map { |attribute|
-              value = self.instance_variable_get("@#{attribute.to_s}")
-              value.present? ? "#{attribute}: #{value}" : "#{attribute}: nil"
+            inspection = self.send(options[:as].to_s).map { |key, value|              
+              "#{key.to_s}: #{self.attribute_for_inspect(value[:instance_variable_name])}"
             }.compact.join(', ')
 
             "#<#{self.class} #{inspection}>"
           end
+
+          define_method(:attribute_for_inspect) do |instance_variable_name|
+            value = instance_variable_get(instance_variable_name.to_s)
+
+            if value.is_a?(String) && value.length > 50
+              "#{value[0..50]}...".inspect
+            else
+              value.inspect
+            end
+          end
+          
         end
 
         Webmaster::Api::AttributesBuilder.new(self, options, &block)
