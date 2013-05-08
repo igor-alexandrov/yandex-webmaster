@@ -1,5 +1,5 @@
 [![Dependency Status](https://gemnasium.com/igor-alexandrov/webmaster.png)](http://gemnasium.com/igor-alexandrov/yandex-webmaster)
-[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/igor-alexandrov/yandex-webmaster)
+[![Code Climate](https://codeclimate.com/github/igor-alexandrov/yandex-webmaster.png)](https://codeclimate.com/github/igor-alexandrov/yandex-webmaster)
 
 # yandex-webmaster
 
