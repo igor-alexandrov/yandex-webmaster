@@ -58,8 +58,7 @@ module Yandex
       # 
       def delete            
         response = self.request(:delete, self.href)
-        # @deleted = true if response.status.to_i == 204
-        @deleted = true if response.status.to_i == 405
+        @deleted = true if response.status.to_i == 204        
         self
       end
 
