@@ -57,6 +57,7 @@ require 'yandex-webmaster'
 
 # get your API credentials at https://oauth.yandex.ru/
 webmaster = Yandex::Webmaster.new(:oauth_token => 'token')
+  => #<Yandex::Webmaster::Client>
 ```    
 
 To check whether you client is authenticated or not, use `authenticated?` method.
@@ -73,13 +74,13 @@ webmaster.authenticated?
 
 ```ruby
 webmaster.hosts
-  => Array[Yandex::Webmaster::Host]
+  => #<Array[Yandex::Webmaster::Host]>
 ```   
 
 **Create site**
 ```ruby
 webmaster.create_host('hostname')
-  => Yandex::Webmaster::Host
+  => #<Yandex::Webmaster::Host>
 ```   
 
 ### Operations with a site
@@ -90,7 +91,7 @@ You can easily find out what API methods are available for selected host.
 
 ```ruby
 h = webmaster.hosts.last
-  => Yandex::Webmaster::Host
+  => #<Yandex::Webmaster::Host>
   
 h.resources
   => {:host_information => "https://webmaster.yandex.ru/api/v2/hosts/<host_id>/stats", :verify_host => "https://webmaster.yandex.ru/api/v2/hosts/<host_id>/verify" ... :excluded_urls_history => "https://webmaster.yandex.ru/api/v2/hosts/<host_id>/history/excluded-urls"}	  
@@ -100,10 +101,10 @@ h.resources
 
 ```ruby
 h = webmaster.hosts.last
-  => Yandex::Webmaster::Host
+  => #<Yandex::Webmaster::Host>
   
 h.delete
-  => Yandex::Webmaster::Host
+  => #<Yandex::Webmaster::Host>
 
 h.deleted?
   => true  	
@@ -112,32 +113,58 @@ h.deleted?
 ### Operations with site statistics
 
 Request refreshes following fields in Host:
- * name
- * verification
- * crawling
- * virused
- * last_access
- * tic
- * url_count
- * index_count
+ * `#name`
+ * `#verification`
+ * `#crawling`
+ * `#virused`
+ * `#last_access`
+ * `#tic`
+ * `#url_count`
+ * `#index_count`
  
 Also request populates the following fields:
- * url_errors
- * internal_links_count
- * links_count
+ * `#url_errors`
+ * `#internal_links_count`
+ * `#links_count`
 
 ```ruby
 h = webmaster.hosts.last
-  => Yandex::Webmaster::Host
+  => #<Yandex::Webmaster::Host>
 
 # Populates host instance with statistics information
 h.stats
-  => Yandex::Webmaster::Host  
+  => #<Yandex::Webmaster::Host>
 
+h.url_errors
+  => 379843
+h.internal_links_count
+  => 52367    
 h.links_count
- => 956
-  
+  => 943
+
+ ```
+
+### Operations with site verification
+
+Basic verification information is loaded with Host load.
+
+For verified sites:
+
+```ruby
+h = webmaster.hosts.last
+  => #<Yandex::Webmaster::Host>
+h.verification
+  #<Yandex::Webmaster::Hosts::Verification state: "verified">	
+```  
+
+And for not verified sites:
+
+```ruby
+h = webmaster.create_host('http://www.tver.ru')
+h.verification
+ => #<Yandex::Webmaster::Hosts::Verification state: "never_verified">
 ```
+
 
 ## Note on Patches / Pull Requests
 
