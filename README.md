@@ -1,7 +1,7 @@
 [![Dependency Status](https://gemnasium.com/igor-alexandrov/webmaster.png)](http://gemnasium.com/igor-alexandrov/webmaster)
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/igor-alexandrov/webmaster)
 
-# webmaster
+# yandex-webmaster
 
 Wrapper for Yandex.Webmaster API. 
 
@@ -17,7 +17,7 @@ Wrapper for Yandex.Webmaster API.
 
 ## Installation
 
-    [sudo] gem install webmaster
+    [sudo] gem install yandex-webmaster
 
 ## Usage
 
@@ -29,23 +29,23 @@ If you have never used Webmaster API or you want to change your authentication c
 
 ```ruby    
 require 'rubygems'
-require 'webmaster'
+require 'yandex-webmaster'
 
 # Get your API credentials at https://oauth.yandex.ru/
-client = Webmaster.new(:app_id => 'your_app_id', :app_password => 'your_app_password')
-  => #<Webmaster::Client>
+webmaster = Yandex::Webmaster.new(:app_id => 'your_app_id', :app_password => 'your_app_password')
+  => #<Yandex::Webmaster::Client>
 
 # Follow the authorization url, you will be redirected to the callback url, specified in your application settings.
-client.authorize_url
+webmaster.authorize_url
   => "https://oauth.yandex.ru/authorize?response_type=code&client_id=your_app_id"
 
 # Use authorization code from params to get authorization token
-client.authenticate(params[:code])
-  => #<Webmaster::Client>
+webmaster.authenticate(params[:code])
+  => #<Yandex::Webmaster::Client>
 
 # If no error is raised then you are free to use any API method
 # Too see what token is now used call for client configuration
-token = client.configuration.oauth_token	
+token = webmaster.configuration.oauth_token	
   => "82af4af2a42e4019bd59a325da0f31d8"
 ```
 
@@ -53,20 +53,91 @@ If you want to restore previously used token, it can be easily done too:
 
 ```ruby
 require 'rubygems'
-require 'webmaster'
+require 'yandex-webmaster'
 
 # get your API credentials at https://oauth.yandex.ru/
-client = Webmaster.new(:oauth_token => 'token')
+webmaster = Yandex::Webmaster.new(:oauth_token => 'token')
 ```    
 
 To check whether you client is authenticated or not, use `authenticated?` method.
 
 ```ruby
 # We have already initialized client before.
-client.authenticated?
+webmaster.authenticated?
   => true
 ```    
 
+### Operations with the list of sites
+
+**Get list of sites**
+
+```ruby
+webmaster.hosts
+  => Array[Yandex::Webmaster::Host]
+```   
+
+**Create site**
+```ruby
+webmaster.create_host('hostname')
+  => Yandex::Webmaster::Host
+```   
+
+### Operations with a site
+
+**Getting site resources**
+
+You can easily find out what API methods are available for selected host.
+
+```ruby
+h = webmaster.hosts.last
+  => Yandex::Webmaster::Host
+  
+h.resources
+  => {:host_information => "https://webmaster.yandex.ru/api/v2/hosts/<host_id>/stats", :verify_host => "https://webmaster.yandex.ru/api/v2/hosts/<host_id>/verify" ... :excluded_urls_history => "https://webmaster.yandex.ru/api/v2/hosts/<host_id>/history/excluded-urls"}	  
+```   
+ 
+**Deleting a site**
+
+```ruby
+h = webmaster.hosts.last
+  => Yandex::Webmaster::Host
+  
+h.delete
+  => Yandex::Webmaster::Host
+
+h.deleted?
+  => true  	
+```
+
+### Operations with site statistics
+
+Request refreshes following fields in Host:
+ * name
+ * verification
+ * crawling
+ * virused
+ * last_access
+ * tic
+ * url_count
+ * index_count
+ 
+Also request populates the following fields:
+ * url_errors
+ * internal_links_count
+ * links_count
+
+```ruby
+h = webmaster.hosts.last
+  => Yandex::Webmaster::Host
+
+# Populates host instance with statistics information
+h.stats
+  => Yandex::Webmaster::Host  
+
+h.links_count
+ => 956
+  
+```
 
 ## Note on Patches / Pull Requests
 
