@@ -27,9 +27,15 @@ module Yandex
 
         attr :total_shows_count, Integer, :writer => :protected
         attr :top_shows_percent, Float, :writer => :protected
-      end
+        attr :top_shows, Array, :writer => :protected
 
-      attr_reader :crawling, :top_shows
+        attr :total_clicks_count, Integer, :writer => :protected
+        attr :top_clicks_percent, Float, :writer => :protected
+        attr :top_clicks, Array, :writer => :protected
+
+        attr :verification, Yandex::Webmaster::Hosts::Verification, :writer => :protected
+        attr :crawling, Yandex::Webmaster::Hosts::Crawling, :writer => :protected
+      end
 
       delegate :verified? => :verification
 
@@ -99,7 +105,7 @@ module Yandex
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/hosts-stats.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/hosts-stats.xml
       #
-      def stats
+      def load_stats
         self.validate_resource!(:host_information)
 
         self.attributes = self.request(:get, self.resources[:host_information]).body
@@ -111,7 +117,7 @@ module Yandex
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/hosts-indexed.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/hosts-indexed.xml
       #
-      def indexed_urls
+      def load_indexed_urls
         self.validate_resource!(:indexed_urls)
 
         self.attributes = self.request(:get, self.resources[:indexed_urls]).body
@@ -123,7 +129,7 @@ module Yandex
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/host-links.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/host-links.xml
       #
-      def incoming_links
+      def load_incoming_links
         self.validate_resource!(:incoming_links)
 
         self.attributes = self.request(:get, self.resources[:incoming_links]).body
@@ -135,12 +141,11 @@ module Yandex
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/host-tops.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/host-tops.xml
       #
-      def top_queries
+      def load_top_queries
         self.validate_resource!(:top_queries)
 
         self.attributes = self.fetch_value(self.request(:get, self.resources[:top_queries]), :top_queries)
-        self
-        # self.fetch_value(self.request(:get, self.resources[:top_queries]), :top_queries)
+        self        
       end
 
     protected
@@ -170,7 +175,10 @@ module Yandex
         @top_shows = self.objects_from_array(Yandex::Webmaster::Hosts::TopInfo, array)
       end
 
-
+      def top_clicks=(value)
+        array = value.is_a?(Hash) ? value[:top_info] : value
+        @top_clicks = self.objects_from_array(Yandex::Webmaster::Hosts::TopInfo, array)
+      end
     end
   end
 end

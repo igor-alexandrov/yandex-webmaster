@@ -132,7 +132,7 @@ h = webmaster.hosts.last
   => #<Yandex::Webmaster::Host>
 
 # Populates host instance with statistics information
-h.stats
+h.load_stats
   => #<Yandex::Webmaster::Host>
 
 h.url_errors

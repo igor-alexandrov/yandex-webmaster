@@ -17,43 +17,40 @@ module Yandex
 
         def attr(*args)
           options = args.extract_options!
-
-          type = self.class.determine_type(options.delete(:type) || args[1])
+          type = options.delete(:type) || args[1]  
           attribute_name = args[0].to_s
 
-          reader_builder = Yandex::Webmaster::Api::Attributes::ReaderBuilder.new(@object, attribute_name, type, options)
-          writer_builder = Yandex::Webmaster::Api::Attributes::WriterBuilder.new(@object, attribute_name, type, options)
+          casted_type = self.class.cast_type(type)
+          self.class.const_missing(type.to_s) if casted_type.blank?
+
+          reader_builder = Yandex::Webmaster::Api::Attributes::ReaderBuilder.new(@object, attribute_name, casted_type, options)
+          writer_builder = Yandex::Webmaster::Api::Attributes::WriterBuilder.new(@object, attribute_name, casted_type, options)
           self.add_attribute(attribute_name, reader_builder, writer_builder)
 
           reader_builder.define_method.define_aliases
           writer_builder.define_method.define_aliases        
         end
 
-      protected
+        def self.cast_type(constant)
+          return constant if constant.is_a?(Class) && constant < Yandex::Webmaster::Api::Attributes::Types::Base
 
-        def self.determine_type(constant)
-          case constant
-          when ::Class
-            return constant if constant < Yandex::Webmaster::Api::Attributes::Types::Base
-
-            self.determine_type_from_string(constant.to_s)
-          else            
-            self.determine_type_from_string(constant.to_s)
-          end 
-          
-        end
-
-        def self.determine_type_from_string(string)
+          string = constant.to_s
           string = string.camelize if (string =~ /\w_\w/ || string[0].downcase == string[0])
-
-          if Yandex::Webmaster::Api::Attributes::Types.const_defined?(string)
-            Yandex::Webmaster::Api::Attributes::Types.const_get(string)
-          elsif Object.const_defined?(string)
-            Object.const_get(string)    
-          else
-            const_missing(string)
+          
+          begin
+            if Yandex::Webmaster::Api::Attributes::Types.const_defined?(string) 
+              return Yandex::Webmaster::Api::Attributes::Types.const_get(string)
+            elsif Module.const_defined?(string)
+              return Module.const_get(string)    
+            else
+              return nil
+            end
+          rescue
+            return constant
           end
         end
+
+      protected  
 
         def add_attribute(attribute_name, reader_builder, writer_builder)        
           @object.send(self.options[:as])[attribute_name.to_sym] = {

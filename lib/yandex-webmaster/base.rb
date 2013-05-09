@@ -25,19 +25,21 @@ module Yandex
           unless options[:inspect] == false          
             define_method(:inspect) do
               inspection = self.send(options[:as].to_s).map { |key, value|              
-                "#{key.to_s}: #{self.attribute_for_inspect(value[:instance_variable_name])}"
+                self.inspect_attribute(key, value[:instance_variable_name])
               }.compact.join(', ')
 
               "#<#{self.class} #{inspection}>"
             end
 
-            define_method(:attribute_for_inspect) do |instance_variable_name|
+            define_method(:inspect_attribute) do |attribute_name, instance_variable_name|
               value = instance_variable_get(instance_variable_name.to_s)
 
               if value.is_a?(String) && value.length > 50
-                "#{value[0..50]}...".inspect
+                "#{attribute_name.to_s}(#{value.size}): " + "#{value[0..50]}...".inspect
+              elsif value.is_a?(Array) && value.length > 5
+                "#{attribute_name.to_s}(#{value.size}): " + "#{value[0..5]}...".inspect
               else
-                value.inspect
+                "#{attribute_name.to_s}: " + value.inspect
               end
             end
             
@@ -47,7 +49,7 @@ module Yandex
         end
 
         def const_missing(name)
-          Yandex::Webmaster::Api::AttributesBuilder.determine_type(name) || super
+          Yandex::Webmaster::Api::AttributesBuilder.cast_type(name) || super
         end
       end
 
@@ -63,17 +65,6 @@ module Yandex
           self.send("#{attr}=", value) if self.respond_to?("#{attr}=")
         end
       end
-
-
-
-      # Configure options and process basic authorization    
-      # def setup(options={})
-      #   options = Webmaster.options.merge(options)
-      #   self.current_options = options
-      #   Configuration.keys.each do |key|
-      #     send("#{key}=", options[key])
-      #   end    
-      # end
 
       # Responds to attribute query or attribute clear
       def method_missing(method, *args, &block) # :nodoc:
@@ -91,77 +82,15 @@ module Yandex
       #
       # Returns Arguments instance.
       #
-      def arguments(args=(not_set = true), options={}, &block)
-        if not_set
-          @arguments
-        else
-          @arguments = Arguments.new(self, options).parse(*args, &block)
-        end
-      end
-
-      # Scope for passing request required arguments.
-      #
-      def with(args)
-        case args
-        when Hash
-          set args
-        when /.*\/.*/i
-          user, repo = args.split('/')
-          set :user => user, :repo => repo
-        else
-          ::Kernel.raise ArgumentError, 'This api does not support passed in arguments'
-        end
-      end
-
-      # Set an option to a given value
-      def set(option, value=(not_set=true), ignore_setter=false, &block)
-        raise ArgumentError, 'value not set' if block and !not_set
-        return self if !not_set and value.nil?
-
-        if not_set
-          set_options option
-          return self
-        end
-
-        if respond_to?("#{option}=") and not ignore_setter
-          return __send__("#{option}=", value)
-        end
-
-        define_accessors option, value
-        self
-      end
+      # def arguments(args=(not_set = true), options={}, &block)
+      #   if not_set
+      #     @arguments
+      #   else
+      #     @arguments = Arguments.new(self, options).parse(*args, &block)
+      #   end
+      # end
 
     protected
-
-      # Set multiple options
-      #
-      def set_options(options)
-        unless options.respond_to?(:each)
-          raise ArgumentError, 'cannot iterate over value'
-        end
-        options.each { |key, value| set(key, value) }
-      end
-
-      def define_accessors(option, value)
-        setter = proc { |val|  set option, val, true }
-        getter = proc { value }
-
-        define_singleton_method("#{option}=", setter) if setter
-        define_singleton_method(option, getter) if getter
-      end
-
-      # Dynamically define a method for setting request option
-      #
-      def define_singleton_method(method_name, content=Proc.new)
-        (class << self; self; end).class_eval do
-          undef_method(method_name) if method_defined?(method_name)
-          if String === content
-            class_eval("def #{method_name}() #{content}; end")
-          else
-            define_method(method_name, &content)
-          end
-        end
-      end
 
       def objects_from_response(klass, response, prefix)        
         self.objects_from_array(klass, self.fetch_value(response, prefix))
