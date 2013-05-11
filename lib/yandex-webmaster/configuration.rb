@@ -61,13 +61,6 @@ module Yandex
         VALID_OPTIONS_KEYS.inject({}) { |h, k| h[k] = send(k); h }
       end
 
-      def setup(options = {})
-        
-        options.each { |k,v| send("#{k}=", v) }        
-
-        self
-      end
-
       # Reset configuration options to their defaults
       #
       def reset!
