@@ -35,9 +35,9 @@ module Yandex
               value = instance_variable_get(instance_variable_name.to_s)
 
               if value.is_a?(String) && value.length > 50
-                "#{attribute_name.to_s}(#{value.size}): " + "#{value[0..50]}...".inspect
+                "#{attribute_name.to_s}[#{value.size}]: " + "#{value[0..50]}...".inspect
               elsif value.is_a?(Array) && value.length > 5
-                "#{attribute_name.to_s}(#{value.size}): " + "#{value[0..5]}...".inspect
+                "#{attribute_name.to_s}[#{value.size}]: " + "#{value[0..5]}...".inspect
               else
                 "#{attribute_name.to_s}: " + value.inspect
               end
@@ -56,7 +56,6 @@ module Yandex
       attr_accessor :configuration
 
       def initialize(attributes = {})
-        self.configuration ||= Yandex::Webmaster::Configuration.new.setup(attributes.delete(:configuration) || {})
         self.attributes = attributes
       end
 
@@ -64,6 +63,11 @@ module Yandex
         attributes.each do |attr,value|
           self.send("#{attr}=", value) if self.respond_to?("#{attr}=")
         end
+      end
+
+      def configuration=(value)
+        value = Yandex::Webmaster::Configuration.new(value) if !value.is_a?(Yandex::Webmaster::Configuration)
+        @configuration = value
       end
 
       # Responds to attribute query or attribute clear

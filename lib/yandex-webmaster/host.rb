@@ -35,6 +35,8 @@ module Yandex
 
         attr :verification, Yandex::Webmaster::Hosts::Verification, :writer => :protected
         attr :crawling, Yandex::Webmaster::Hosts::Crawling, :writer => :protected
+
+        attr :sitemaps, Array, :writer => :protected
       end
 
       delegate :verified? => :verification
@@ -58,7 +60,7 @@ module Yandex
         end
       end
 
-      # Delete information about the host from Yandex.Market
+      # Delete information about the host from Yandex.Webmaster
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/hosts-delete.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/hosts-delete.xml
       # 
@@ -92,12 +94,15 @@ module Yandex
       def verification(reload = false)
         @verification = nil if reload
 
-        if @verification.nil?        
-          self.validate_resource!(:verify_host)
-          self.verification = self.fetch_value(self.request(:get, self.resources[:verify_host]), :verification)
-        end
-
+        self.load_verification if @verification.nil?
         @verification
+      end
+
+      def load_verification
+        self.validate_resource!(:verify_host)
+
+        self.verification = self.fetch_value(self.request(:get, self.resources[:verify_host]), :verification)
+        self
       end
 
       # Load stats for the host
@@ -148,6 +153,25 @@ module Yandex
         self        
       end
 
+      # Get(load) list of sitemap files for the host
+      # @return [Yandex::Webmaster::Host]
+      # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/sitemaps.xml
+      # [EN] http://api.yandex.com/webmaster/doc/dg/reference/sitemaps.xml
+      #
+      def sitemaps(reload = false)
+        @sitemaps = nil if reload
+
+        self.load_sitemaps if @sitemaps.nil?
+        @sitemaps        
+      end
+
+      def load_sitemaps
+        self.validate_resource!(:sitemaps)
+        
+        self.sitemaps = self.fetch_value(self.request(:get, self.resources[:sitemaps]), :sitemap)
+        self
+      end
+
     protected
 
       def validate_resource!(resource)
@@ -178,6 +202,11 @@ module Yandex
       def top_clicks=(value)
         array = value.is_a?(Hash) ? value[:top_info] : value
         @top_clicks = self.objects_from_array(Yandex::Webmaster::Hosts::TopInfo, array)
+      end
+
+      def sitemaps=(value)
+        array = Array.wrap(value).flatten
+        @sitemaps = self.objects_from_array(Yandex::Webmaster::Hosts::Sitemap, array)
       end
     end
   end

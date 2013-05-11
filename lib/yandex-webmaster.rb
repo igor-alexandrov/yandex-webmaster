@@ -58,6 +58,8 @@ module Yandex
     
     module Hosts
       autoload :Crawling, 'yandex-webmaster/hosts/crawling'
+      autoload :Sitemap, 'yandex-webmaster/hosts/sitemap'
+      autoload :SitemapInfo, 'yandex-webmaster/hosts/sitemap_info'
       autoload :TopInfo, 'yandex-webmaster/hosts/top_info'
       autoload :Verification, 'yandex-webmaster/hosts/verification'
     end

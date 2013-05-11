@@ -46,9 +46,11 @@ module Yandex
 
       attr_accessor *VALID_OPTIONS_KEYS
 
-      def initialize
-        super
+      def initialize(options = {})        
+        raise ArgumentError if (options.symbolize_keys!.keys - VALID_OPTIONS_KEYS).any?
+
         self.reset!
+        options.each { |k,v| send("#{k}=", v) }
       end
 
       def keys
@@ -60,7 +62,7 @@ module Yandex
       end
 
       def setup(options = {})
-        raise ArgumentError if (options.symbolize_keys!.keys - VALID_OPTIONS_KEYS).any?
+        
         options.each { |k,v| send("#{k}=", v) }        
 
         self
@@ -82,11 +84,13 @@ module Yandex
       end      
 
       # Convenience method to allow for global setting of configuration options
+      # 
       def configure
         yield self
       end
 
       # Responds to attribute query or attribute clear
+      # 
       def method_missing(method, *args, &block) # :nodoc:
         case method.to_s
         when /^(.*)\?$/
