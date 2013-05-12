@@ -159,8 +159,57 @@ h.internal_links_count
   => 52367    
 h.links_count
   => 943
-
  ```
+
+### Operations with Sitemap files
+
+**Getting a list of Sitemap files**
+
+```ruby
+# makes call to API and caches list of sitemaps for the host
+webmaster.hosts.first.sitemaps
+  => #<Array[Yandex::Webmaster::Hosts::Sitemap]>
+```
+
+To reload list of sitemaps for the host, call `#host` method with explicitly passed `reload` parameter.
+
+```ruby
+webmaster.hosts.first.sitemaps(true)
+  => #<Array[Yandex::Webmaster::Hosts::Sitemap]>  
+```  
+
+**Getting information about a site's Sitemap file**
+
+To load detailed information about Sitemap file use `#load_details` method.
+
+```ruby
+sitemap = webmaster.hosts.first.sitemaps.first
+  => #<Yandex::Webmaster::Hosts::Sitemap>
+sitemap.load_details
+  => #<Yandex::Webmaster::Hosts::Sitemap>  
+```
+
+When details are loaded you can see Sitemap info.
+
+```ruby
+sitemap.latest_info
+  => #<Yandex::Webmaster::Hosts::SitemapInfo>
+sitemap.in_search_info
+  => #<Yandex::Webmaster::Hosts::SitemapInfo>
+```
+
+**Removing a Sitemap**
+
+```ruby
+sitemap = webmaster.hosts.first.sitemaps.first
+  => #<Yandex::Webmaster::Hosts::Sitemap>
+sitemap.delete
+  => #<Yandex::Webmaster::Host>
+sitemap.deleted?
+  => true  	
+```
+
+
 
 ### Operations with site verification
 
