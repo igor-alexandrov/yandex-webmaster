@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Igor Alexandrov"]
-  s.date = "2013-05-08"
+  s.date = "2013-05-12"
   s.email = "igor.alexandrov@gmail.com"
   s.extra_rdoc_files = [
     "LICENSE.txt",
@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
     "lib/yandex-webmaster/api/attributes/types/time.rb",
     "lib/yandex-webmaster/api/attributes/writer_builder.rb",
     "lib/yandex-webmaster/api/attributes_builder.rb",
+    "lib/yandex-webmaster/api_factory.rb",
     "lib/yandex-webmaster/authorization.rb",
     "lib/yandex-webmaster/base.rb",
     "lib/yandex-webmaster/client.rb",
@@ -52,6 +53,8 @@ Gem::Specification.new do |s|
     "lib/yandex-webmaster/errors.rb",
     "lib/yandex-webmaster/host.rb",
     "lib/yandex-webmaster/hosts/crawling.rb",
+    "lib/yandex-webmaster/hosts/sitemap.rb",
+    "lib/yandex-webmaster/hosts/sitemap_info.rb",
     "lib/yandex-webmaster/hosts/top_info.rb",
     "lib/yandex-webmaster/hosts/verification.rb",
     "lib/yandex-webmaster/request.rb",
@@ -76,6 +79,10 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<oauth2>, [">= 0"])
       s.add_runtime_dependency(%q<libxml-ruby>, [">= 0"])
       s.add_runtime_dependency(%q<yandex-webmaster>, [">= 0"])
+      s.add_development_dependency(%q<shoulda>, [">= 0"])
+      s.add_development_dependency(%q<rdoc>, [">= 0"])
+      s.add_development_dependency(%q<bundler>, [">= 0"])
+      s.add_development_dependency(%q<jeweler>, [">= 0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<rdoc>, [">= 0"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
@@ -121,12 +128,20 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<rdoc>, [">= 0"])
       s.add_dependency(%q<bundler>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
+      s.add_dependency(%q<shoulda>, [">= 0"])
+      s.add_dependency(%q<rdoc>, [">= 0"])
+      s.add_dependency(%q<bundler>, [">= 0"])
+      s.add_dependency(%q<jeweler>, [">= 0"])
     end
   else
     s.add_dependency(%q<faraday>, [">= 0"])
     s.add_dependency(%q<oauth2>, [">= 0"])
     s.add_dependency(%q<libxml-ruby>, [">= 0"])
     s.add_dependency(%q<yandex-webmaster>, [">= 0"])
+    s.add_dependency(%q<shoulda>, [">= 0"])
+    s.add_dependency(%q<rdoc>, [">= 0"])
+    s.add_dependency(%q<bundler>, [">= 0"])
+    s.add_dependency(%q<jeweler>, [">= 0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<rdoc>, [">= 0"])
     s.add_dependency(%q<bundler>, [">= 0"])
