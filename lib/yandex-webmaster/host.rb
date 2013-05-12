@@ -103,9 +103,7 @@ module Yandex
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/hosts-verify.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/hosts-verify.xml
       def verification(reload = false)
-        @verification = nil if reload
-
-        self.load_verification if @verification.nil?
+        self.load_verification if reload || @verification.nil?
         @verification
       end
 
@@ -169,10 +167,8 @@ module Yandex
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/sitemaps.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/sitemaps.xml
       #
-      def sitemaps(reload = false)
-        @sitemaps = nil if reload
-
-        self.load_sitemaps if @sitemaps.nil?
+      def sitemaps(reload = false)        
+        self.load_sitemaps if reload || @sitemaps.nil?
         @sitemaps        
       end
 

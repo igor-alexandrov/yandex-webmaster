@@ -1,7 +1,7 @@
 [![Dependency Status](https://gemnasium.com/igor-alexandrov/webmaster.png)](http://gemnasium.com/igor-alexandrov/yandex-webmaster)
 [![Code Climate](https://codeclimate.com/github/igor-alexandrov/yandex-webmaster.png)](https://codeclimate.com/github/igor-alexandrov/yandex-webmaster)
 
-# yandex-webmaster
+# Yandex::Webmaster
 
 Wrapper for Yandex.Webmaster API. 
 
@@ -23,7 +23,7 @@ Wrapper for Yandex.Webmaster API.
 
 ### Authentication
 
-Yandex's API uses OAuth for authentication. Luckily, the Webmaster gem hides most of the details from you.
+Yandex's API uses OAuth for authentication. Luckily, the Yandex::Webmaster gem hides most of the details from you.
 
 If you have never used Webmaster API or you want to change your authentication credentials or your authorization token expired, then you should create new one:
 
@@ -72,14 +72,32 @@ webmaster.authenticated?
 
 **Get list of sites**
 
+Most of Yandex::Webmaster loading methods are lazy, data will be actually loaded only when you really will need it.
+
 ```ruby
 webmaster.hosts
+  => #<Yandex::Webmaster::ApiFactory>  
+webmaster.hosts.all  
   => #<Array[Yandex::Webmaster::Host]>
+# this does not really makes a query to API, list if hosts is cached.
+webmaster.hosts.first  
+  => #<Yandex::Webmaster::Host>
+```   
+
+To reload list of hosts, call `#host` method with explicitly passed `reload` parameter.
+
+```ruby
+# makes call to API and caches list of hosts
+webmaster.hosts(true).all  
+  => #<Array[Yandex::Webmaster::Host]>
+# clears cache and makes call to API again.
+webmaster.hosts(true).first  
+  => #<Yandex::Webmaster::Host>
 ```   
 
 **Create site**
 ```ruby
-webmaster.create_host('hostname')
+webmaster.hosts.create('hostname')
   => #<Yandex::Webmaster::Host>
 ```   
 
@@ -160,7 +178,7 @@ h.verification
 And for not verified sites:
 
 ```ruby
-h = webmaster.create_host('http://www.tver.ru')
+h = webmaster.hosts.create('http://www.tver.ru')
 h.verification
  => #<Yandex::Webmaster::Hosts::Verification state: "never_verified">
 ```
