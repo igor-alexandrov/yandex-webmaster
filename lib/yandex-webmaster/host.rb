@@ -41,6 +41,17 @@ module Yandex
 
       delegate :verified? => :verification
 
+      def self.create(name, factory)
+        xml = "<host><name>#{name}</name></host>"
+        response = factory.request(:post, '/hosts', xml)
+        if response.status.to_i == 201
+          self.new({
+            :href => response.headers['Location'],
+            :configuration => factory.configuration
+          })          
+        end
+      end
+
       # Id of the host
       # @return [Integer]
       #
