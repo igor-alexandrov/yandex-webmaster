@@ -6,15 +6,26 @@ require 'rspec'
 require 'webmock/rspec'
 require 'vcr'
 
-VCR.configure do |c|
-  c.cassette_library_dir = 'spec/fixtures/cassettes'
-  c.hook_into(:webmock)
-  c.ignore_localhost = true
-  c.default_cassette_options = { :record => :once }
+VCR.configure do |config|
+  config.cassette_library_dir = 'spec/fixtures/cassettes'
+  config.hook_into(:webmock)
+  config.ignore_localhost = true
+  config.default_cassette_options = { :record => :once }
+  config.configure_rspec_metadata!
 end
 
-RSpec.configure do |c|
-  c.extend VCR::RSpec::Macros
+RSpec.configure do |config|
+  config.include WebMock::API
+  config.order = :rand
+  config.color_enabled = true
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+
+  config.before(:each) do
+    WebMock.reset!
+  end
+  config.after(:each) do
+    WebMock.reset!
+  end
 end
 
 APPLICATION_ID = '663576cbd55948a4ae45424fb508ef97'
