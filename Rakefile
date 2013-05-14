@@ -22,16 +22,8 @@ Jeweler::Tasks.new do |gem|
   gem.email = "igor.alexandrov@gmail.com"
   gem.authors = ["Igor Alexandrov"]
   gem.version = Yandex::Webmaster::Version::STRING
-  # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
-
-require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
-end
 
 task :default => :install
 
