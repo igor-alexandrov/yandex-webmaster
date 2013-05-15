@@ -6,6 +6,9 @@ require 'rspec'
 require 'webmock/rspec'
 require 'vcr'
 
+require 'coveralls'
+Coveralls.wear!
+
 VCR.configure do |config|
   config.cassette_library_dir = 'spec/fixtures/cassettes'
   config.hook_into(:webmock)

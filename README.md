@@ -1,5 +1,6 @@
-[![Dependency Status](https://gemnasium.com/igor-alexandrov/yandex-webmaster.png)](https://gemnasium.com/igor-alexandrov/yandex-webmaster)
+[![Build Status](https://travis-ci.org/igor-alexandrov/yandex-webmaster.png)](https://travis-ci.org/igor-alexandrov/yandex-webmaster)
 [![Code Climate](https://codeclimate.com/github/igor-alexandrov/yandex-webmaster.png)](https://codeclimate.com/github/igor-alexandrov/yandex-webmaster)
+[![Dependency Status](https://gemnasium.com/igor-alexandrov/yandex-webmaster.png)](https://gemnasium.com/igor-alexandrov/yandex-webmaster)
 
 # Yandex::Webmaster
 
