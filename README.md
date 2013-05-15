@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/igor-alexandrov/yandex-webmaster.png)](https://travis-ci.org/igor-alexandrov/yandex-webmaster)
 [![Code Climate](https://codeclimate.com/github/igor-alexandrov/yandex-webmaster.png)](https://codeclimate.com/github/igor-alexandrov/yandex-webmaster)
+[![Coverage Status](https://coveralls.io/repos/igor-alexandrov/yandex-webmaster/badge.png)](https://coveralls.io/r/igor-alexandrov/yandex-webmaster)
 [![Dependency Status](https://gemnasium.com/igor-alexandrov/yandex-webmaster.png)](https://gemnasium.com/igor-alexandrov/yandex-webmaster)
+[![Gem Version](https://badge.fury.io/rb/yandex-webmaster.png)](http://badge.fury.io/rb/yandex-webmaster)
 
 # Yandex::Webmaster
 
