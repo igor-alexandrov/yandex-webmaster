@@ -2,15 +2,10 @@ require 'yandex-webmaster/version'
 require 'yandex-webmaster/configuration'
 require 'yandex-webmaster/errors'
 
-require 'yandex-webmaster/core_ext/array'
-require 'yandex-webmaster/core_ext/class'
 require 'yandex-webmaster/core_ext/date'
 require 'yandex-webmaster/core_ext/date_time'
 require 'yandex-webmaster/core_ext/hash'
-require 'yandex-webmaster/core_ext/nil_class'
-require 'yandex-webmaster/core_ext/object'
 require 'yandex-webmaster/core_ext/string'
-
 
 module Yandex
   module Webmaster

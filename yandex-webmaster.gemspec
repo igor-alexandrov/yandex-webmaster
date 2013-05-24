@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'faraday'
   spec.add_dependency 'oauth2'
   spec.add_dependency 'libxml-ruby'
+  spec.add_dependency 'attrio'
 
   spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'webmock', '~> 1.9.0'

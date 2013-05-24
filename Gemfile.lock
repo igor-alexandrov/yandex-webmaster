@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     yandex-webmaster (0.2.0)
+      attrio
       faraday
       libxml-ruby
       oauth2
@@ -10,6 +11,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     addressable (2.3.4)
+    attrio (0.1.1)
     colorize (0.5.8)
     coveralls (0.6.7)
       colorize
