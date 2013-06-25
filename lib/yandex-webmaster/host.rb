@@ -107,13 +107,6 @@ module Yandex
         @verification
       end
 
-      def load_verification
-        self.validate_resource!(:verify_host)
-
-        self.verification = self.fetch_value(self.request(:get, self.resources[:verify_host]), :verification)
-        self
-      end
-
       # Load stats for the host
       # @return [Yandex::Webmaster::Host]
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/hosts-stats.xml
@@ -172,14 +165,21 @@ module Yandex
         @sitemaps        
       end
 
+    protected
+
+      def load_verification
+        self.validate_resource!(:verify_host)
+
+        self.verification = self.fetch_value(self.request(:get, self.resources[:verify_host]), :verification)
+        self
+      end
+
       def load_sitemaps
         self.validate_resource!(:sitemaps)
         
         self.sitemaps = self.fetch_value(self.request(:get, self.resources[:sitemaps]), :sitemap)
         self
       end
-
-    protected
 
       def validate_resource!(resource)
         unless self.resources.keys.include?(resource)
@@ -212,7 +212,7 @@ module Yandex
       end
 
       def sitemaps=(value)
-        array = Array.wrap(value).flatten
+        array = Helpers.to_a(value).flatten
         @sitemaps = self.objects_from_array(Yandex::Webmaster::Hosts::Sitemap, array)
       end
     end

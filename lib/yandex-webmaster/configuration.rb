@@ -47,7 +47,7 @@ module Yandex
       attr_accessor *VALID_OPTIONS_KEYS
 
       def initialize(options = {})        
-        raise ArgumentError if (options.symbolize_keys!.keys - VALID_OPTIONS_KEYS).any?
+        raise ArgumentError if (Helpers.symbolize_hash_keys(options).keys - VALID_OPTIONS_KEYS).any?
 
         self.reset!
         options.each { |k,v| send("#{k}=", v) }

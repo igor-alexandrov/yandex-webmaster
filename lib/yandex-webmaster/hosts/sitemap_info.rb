@@ -36,7 +36,7 @@ module Yandex
       protected
 
         def added_by=(value)
-          @added_by = Array.wrap(value).flatten.map{ |v| v.downcase.underscore }.select{ |v| ADDED_BY.include?(v) }           
+          @added_by = Helpers.to_a(value).flatten.map{ |v| v.downcase.underscore }.select{ |v| ADDED_BY.include?(v) }
         end
 
         def format=(value)

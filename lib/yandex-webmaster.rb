@@ -45,6 +45,8 @@ module Yandex
       end
     end
 
+    autoload :Helpers, 'yandex-webmaster/helpers'
+
     autoload :Base, 'yandex-webmaster/base'
     autoload :ApiFactory, 'yandex-webmaster/api_factory'
     autoload :Client, 'yandex-webmaster/client'  

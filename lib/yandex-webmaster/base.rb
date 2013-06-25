@@ -23,8 +23,10 @@ module Yandex
       end
 
       def attributes=(attributes = {})
-        attributes.each do |attr,value|
-          self.send("#{attr}=", value) if self.respond_to?("#{attr}=")
+        unless attributes.nil?
+          attributes.each do |attr,value|
+            self.send("#{attr}=", value) if self.respond_to?("#{attr}=")
+          end
         end
       end
 
@@ -71,6 +73,7 @@ module Yandex
       # @param array [Array]      
       # @return [Array<Class>]
       def objects_from_array(klass, array)
+        array = Helpers.to_a(array)
         array.map do |attributes|
           instance = klass.new
           instance.configuration = self.configuration
