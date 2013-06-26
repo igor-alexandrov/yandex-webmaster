@@ -19,9 +19,9 @@ module Yandex
 
         attr :internal_links_count, Integer, :writer => :protected
 
-        attr :indexed_urls, Yandex::Webmaster::Hosts::IndexedUrls, :writer => :protected
-        attr :incoming_links, Yandex::Webmaster::Hosts::IncomingLinks, :writer => :protected
-        attr :top_queries, Yandex::Webmaster::Hosts::TopQueries, :writer => :protected
+        attr :indexed_urls, Yandex::Webmaster::Hosts::IndexedUrlsInfo, :writer => :protected
+        attr :incoming_links, Yandex::Webmaster::Hosts::IncomingLinksInfo, :writer => :protected
+        attr :top_queries, Yandex::Webmaster::Hosts::TopQueriesInfo, :writer => :protected
 
         attr :verification, Yandex::Webmaster::Hosts::Verification, :writer => :protected
         attr :crawling, Yandex::Webmaster::Hosts::Crawling, :writer => :protected
@@ -207,34 +207,24 @@ module Yandex
       end
 
       def indexed_urls=(value)
-        @indexed_urls = Yandex::Webmaster::Hosts::IndexedUrls.new(value)
+        @indexed_urls = Yandex::Webmaster::Hosts::IndexedUrlsInfo.new(value)
         @indexed_urls.host = self
         @indexed_urls.configuration = self.configuration
         @indexed_urls
       end
 
       def incoming_links=(value)
-        @incoming_links = Yandex::Webmaster::Hosts::IncomingLinks.new(value)
+        @incoming_links = Yandex::Webmaster::Hosts::IncomingLinksInfo.new(value)
         @incoming_links.host = self
         @incoming_links.configuration = self.configuration
         @incoming_links
       end
 
       def top_queries=(value)
-        @top_queries = Yandex::Webmaster::Hosts::TopQueries.new(value)
+        @top_queries = Yandex::Webmaster::Hosts::TopQueriesInfo.new(value)
         @top_queries.host = self
         @top_queries.configuration = self.configuration
         @top_queries
-      end
-
-      def top_shows=(value)
-        array = value.is_a?(Hash) ? value[:top_info] : value
-        @top_shows = self.objects_from_array(Yandex::Webmaster::Hosts::TopInfo, array)
-      end
-
-      def top_clicks=(value)
-        array = value.is_a?(Hash) ? value[:top_info] : value
-        @top_clicks = self.objects_from_array(Yandex::Webmaster::Hosts::TopInfo, array)
       end
 
       def sitemaps=(value)

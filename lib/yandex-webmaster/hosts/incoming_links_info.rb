@@ -3,11 +3,11 @@
 module Yandex
   module Webmaster
     module Hosts
-      class IndexedUrls < Base  
+      class IncomingLinksInfo < Base  
 
         define_attributes :as => 'api_attributes' do
-          attr :index_count, Integer, :writer => :protected
-          attr :last_week_index_urls, Array, :writer => :protected
+          attr :links_count, Integer, :writer => :protected
+          attr :last_week_links, Array, :writer => :protected
         end
 
         attr_accessor :host      

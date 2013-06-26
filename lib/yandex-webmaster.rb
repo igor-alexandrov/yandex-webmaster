@@ -52,12 +52,12 @@ module Yandex
       autoload :Crawling, 'yandex-webmaster/hosts/crawling'
       autoload :Sitemap, 'yandex-webmaster/hosts/sitemap'
       autoload :SitemapInfo, 'yandex-webmaster/hosts/sitemap_info'
-      autoload :TopInfo, 'yandex-webmaster/hosts/top_info'
       autoload :Verification, 'yandex-webmaster/hosts/verification'
 
-      autoload :IndexedUrls, 'yandex-webmaster/hosts/indexed_urls'
-      autoload :IncomingLinks, 'yandex-webmaster/hosts/incoming_links'
-      autoload :TopQueries, 'yandex-webmaster/hosts/top_queries'
+      autoload :IndexedUrlsInfo, 'yandex-webmaster/hosts/indexed_urls_info'
+      autoload :IncomingLinksInfo, 'yandex-webmaster/hosts/incoming_links_info'
+      autoload :TopQueriesInfo, 'yandex-webmaster/hosts/top_queries_info'
+      autoload :Query, 'yandex-webmaster/hosts/query'
     end
 
     module Request

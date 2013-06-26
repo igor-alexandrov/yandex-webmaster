@@ -3,7 +3,7 @@
 module Yandex
   module Webmaster
     module Hosts
-      class TopInfo < Base  
+      class Query < Base  
 
         define_attributes :as => 'api_attributes' do        
           attr :query, String, :writer => :protected
