@@ -17,21 +17,11 @@ module Yandex
         attr :url_count, Integer, :writer => :protected
         attr :url_errors, Integer, :writer => :protected
 
-        attr :index_count, Integer, :writer => :protected
-        attr :last_week_index_urls, Array, :writer => :protected
-
         attr :internal_links_count, Integer, :writer => :protected
 
-        attr :links_count, Integer, :writer => :protected
-        attr :last_week_links, Array, :writer => :protected
-
-        attr :total_shows_count, Integer, :writer => :protected
-        attr :top_shows_percent, Float, :writer => :protected
-        attr :top_shows, Array, :writer => :protected
-
-        attr :total_clicks_count, Integer, :writer => :protected
-        attr :top_clicks_percent, Float, :writer => :protected
-        attr :top_clicks, Array, :writer => :protected
+        attr :indexed_urls, Yandex::Webmaster::Hosts::IndexedUrls, :writer => :protected
+        attr :incoming_links, Yandex::Webmaster::Hosts::IncomingLinks, :writer => :protected
+        attr :top_queries, Yandex::Webmaster::Hosts::TopQueries, :writer => :protected
 
         attr :verification, Yandex::Webmaster::Hosts::Verification, :writer => :protected
         attr :crawling, Yandex::Webmaster::Hosts::Crawling, :writer => :protected
@@ -119,40 +109,34 @@ module Yandex
         self
       end
 
-      # Load information about indexed urls for the host
-      # @return [Yandex::Webmaster::Host]
+      # Information about indexed urls for the host
+      # @return [Yandex::Webmaster::Hosts::IndexedUrls]
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/hosts-indexed.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/hosts-indexed.xml
       #
-      def load_indexed_urls
-        self.validate_resource!(:indexed_urls)
-
-        self.attributes = self.request(:get, self.resources[:indexed_urls]).body
-        self
+      def indexed_urls(reload = false)
+        self.load_indexed_urls if reload || @indexed_urls.nil?
+        @indexed_urls
       end
 
-      # Load information about incoming links for the host
-      # @return [Yandex::Webmaster::Host]
+      # Information about incoming links for the host
+      # @return [Yandex::Webmaster::Hosts::IncomingLinks]
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/host-links.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/host-links.xml
       #
-      def load_incoming_links
-        self.validate_resource!(:incoming_links)
-
-        self.attributes = self.request(:get, self.resources[:incoming_links]).body
-        self
+      def incoming_links(reload = false)
+        self.load_incoming_links if reload || @incoming_links.nil?
+        @incoming_links
       end
 
-      # Load information about top queries for the host
-      # @return [Yandex::Webmaster::Host]
+      # Information about top queries for the host
+      # @return [Yandex::Webmaster::Hosts::TopQueries]
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/host-tops.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/host-tops.xml
       #
-      def load_top_queries
-        self.validate_resource!(:top_queries)
-
-        self.attributes = self.fetch_value(self.request(:get, self.resources[:top_queries]), :top_queries)
-        self        
+      def top_queries(reload = false)
+        self.load_top_queries if reload || @top_queries.nil?
+        @top_queries
       end
 
       # Get(load) list of sitemap files for the host
@@ -160,9 +144,9 @@ module Yandex
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/sitemaps.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/sitemaps.xml
       #
-      def sitemaps(reload = false)        
+      def sitemaps(reload = false)
         self.load_sitemaps if reload || @sitemaps.nil?
-        @sitemaps        
+        @sitemaps
       end
 
     protected
@@ -172,6 +156,27 @@ module Yandex
 
         self.verification = self.fetch_value(self.request(:get, self.resources[:verify_host]), :verification)
         self
+      end
+
+      def load_indexed_urls
+        self.validate_resource!(:indexed_urls)
+
+        self.indexed_urls = self.request(:get, self.resources[:indexed_urls]).body
+        self
+      end
+
+      def load_incoming_links
+        self.validate_resource!(:incoming_links)
+
+        self.incoming_links = self.request(:get, self.resources[:incoming_links]).body
+        self
+      end
+
+      def load_top_queries
+        self.validate_resource!(:top_queries)
+
+        self.top_queries = self.fetch_value(self.request(:get, self.resources[:top_queries]), :top_queries)
+        self        
       end
 
       def load_sitemaps
@@ -187,7 +192,7 @@ module Yandex
         end
       end
 
-      def verification=(value)      
+      def verification=(value)
         @verification = value.is_a?(Yandex::Webmaster::Hosts::Verification) ? value : Yandex::Webmaster::Hosts::Verification.new(value)
         @verification.host = self
         @verification.configuration = self.configuration
@@ -199,6 +204,27 @@ module Yandex
         @crawling.host = self
         @crawling.configuration = self.configuration
         @crawling
+      end
+
+      def indexed_urls=(value)
+        @indexed_urls = Yandex::Webmaster::Hosts::IndexedUrls.new(value)
+        @indexed_urls.host = self
+        @indexed_urls.configuration = self.configuration
+        @indexed_urls
+      end
+
+      def incoming_links=(value)
+        @incoming_links = Yandex::Webmaster::Hosts::IncomingLinks.new(value)
+        @incoming_links.host = self
+        @incoming_links.configuration = self.configuration
+        @incoming_links
+      end
+
+      def top_queries=(value)
+        @top_queries = Yandex::Webmaster::Hosts::TopQueries.new(value)
+        @top_queries.host = self
+        @top_queries.configuration = self.configuration
+        @top_queries
       end
 
       def top_shows=(value)

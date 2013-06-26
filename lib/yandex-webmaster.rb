@@ -59,6 +59,10 @@ module Yandex
       autoload :SitemapInfo, 'yandex-webmaster/hosts/sitemap_info'
       autoload :TopInfo, 'yandex-webmaster/hosts/top_info'
       autoload :Verification, 'yandex-webmaster/hosts/verification'
+
+      autoload :IndexedUrls, 'yandex-webmaster/hosts/indexed_urls'
+      autoload :IncomingLinks, 'yandex-webmaster/hosts/incoming_links'
+      autoload :TopQueries, 'yandex-webmaster/hosts/top_queries'
     end
 
     module Request
