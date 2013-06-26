@@ -29,6 +29,11 @@ module Yandex
         attr :sitemaps, Array, :writer => :protected
       end
 
+      delegate [:index_count, :last_week_index_urls] => :indexed_urls
+      delegate [:links_count, :last_week_links] => :incoming_links
+      delegate [:total_shows_count, :top_shows_percent, :top_shows, 
+                :total_clicks_count, :top_clicks_percent, :top_clicks] => :top_queries
+
       delegate :verified? => :verification
 
       def self.create(name, factory)
