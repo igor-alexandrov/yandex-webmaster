@@ -40,7 +40,7 @@ module Yandex
     protected
         
       def connection_options(options = {})
-        options.slice!(*ALLOWED_OPTIONS)
+        options.select! { |key| ALLOWED_OPTIONS.include?(key) }
 
         {
           :headers => {            

@@ -2,11 +2,6 @@ require 'yandex-webmaster/version'
 require 'yandex-webmaster/configuration'
 require 'yandex-webmaster/errors'
 
-require 'yandex-webmaster/core_ext/date'
-require 'yandex-webmaster/core_ext/date_time'
-require 'yandex-webmaster/core_ext/hash'
-require 'yandex-webmaster/core_ext/string'
-
 module Yandex
   module Webmaster
     class << self
