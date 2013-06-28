@@ -58,6 +58,8 @@ module Yandex
       autoload :IncomingLinksInfo, 'yandex-webmaster/hosts/incoming_links_info'
       autoload :TopQueriesInfo, 'yandex-webmaster/hosts/top_queries_info'
       autoload :Query, 'yandex-webmaster/hosts/query'
+
+      autoload :History, 'yandex-webmaster/hosts/history'
     end
 
     module Request

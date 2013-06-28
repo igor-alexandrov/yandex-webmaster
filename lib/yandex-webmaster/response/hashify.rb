@@ -6,7 +6,7 @@ require 'xml/libxml'
 module Yandex
   module Webmaster
     class Response::Hashify < Faraday::Response::Middleware
-      def parse(body)      
+      def parse(body)
         self.from_xml(body) if body.present?
       end
 
@@ -27,10 +27,11 @@ module Yandex
             result_hash = {} 
 
             node.each_child do |child| 
-              result = xml_node_to_hash(child) 
+              result = xml_node_to_hash(child)
 
               if child.name == "text"
-                return result if !child.next? && !child.prev? && result.present?              
+                return result if !child.next? && !child.prev? && result.present? && !node.attributes?
+                result_hash[:value] = result
               elsif result_hash[child.name.underscore.to_sym] && result.present?
                 if result_hash[child.name.underscore.to_sym].is_a?(Object::Array)
                   result_hash[child.name.underscore.to_sym] << result

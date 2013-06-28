@@ -97,6 +97,7 @@ module Yandex
       # @return [Yandex::Webmaster::Hosts::Verification]
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/hosts-verify.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/hosts-verify.xml
+      #
       def verification(reload = false)
         self.load_verification if reload || @verification.nil?
         @verification
@@ -115,7 +116,7 @@ module Yandex
       end
 
       # Information about indexed urls for the host
-      # @return [Yandex::Webmaster::Hosts::IndexedUrls]
+      # @return [Yandex::Webmaster::Hosts::IndexedUrlsInfo]
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/hosts-indexed.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/hosts-indexed.xml
       #
@@ -125,7 +126,7 @@ module Yandex
       end
 
       # Information about incoming links for the host
-      # @return [Yandex::Webmaster::Hosts::IncomingLinks]
+      # @return [Yandex::Webmaster::Hosts::IncomingLinksInfo]
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/host-links.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/host-links.xml
       #
@@ -135,7 +136,7 @@ module Yandex
       end
 
       # Information about top queries for the host
-      # @return [Yandex::Webmaster::Hosts::TopQueries]
+      # @return [Yandex::Webmaster::Hosts::TopQueriesInfo]
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/host-tops.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/host-tops.xml
       #
@@ -145,13 +146,21 @@ module Yandex
       end
 
       # Get(load) list of sitemap files for the host
-      # @return [Yandex::Webmaster::Host]
+      # @return [Yandex::Webmaster::Host::Sitemap]
       # [RU] http://api.yandex.ru/webmaster/doc/dg/reference/sitemaps.xml
       # [EN] http://api.yandex.com/webmaster/doc/dg/reference/sitemaps.xml
       #
       def sitemaps(reload = false)
         self.load_sitemaps if reload || @sitemaps.nil?
         @sitemaps
+      end
+
+      # Information about history of the host
+      # @return [Yandex::Webmaster::Hosts::History]
+      #
+      def history
+        @history = Yandex::Webmaster::Hosts::History.new(:host => self) if @history.nil?
+        @history
       end
 
     protected
