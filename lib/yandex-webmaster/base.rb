@@ -31,8 +31,9 @@ module Yandex
       end
 
       def configuration=(value)
-        value = Yandex::Webmaster::Configuration.new(value) if !value.is_a?(Yandex::Webmaster::Configuration)
-        @configuration = value
+        configuration_instance = Yandex::Webmaster::Configuration.instance
+        configuration_instance.options = value unless value.is_a?(Yandex::Webmaster::Configuration)
+        @configuration = configuration_instance
       end
 
       # Responds to attribute query or attribute clear
@@ -61,7 +62,7 @@ module Yandex
 
     protected
 
-      def objects_from_response(klass, response, prefix)        
+      def objects_from_response(klass, response, prefix)
         self.objects_from_array(klass, self.fetch_value(response, prefix))
       end
 
@@ -70,7 +71,7 @@ module Yandex
       end
 
       # @param klass [Class]
-      # @param array [Array]      
+      # @param array [Array]
       # @return [Array<Class>]
       def objects_from_array(klass, array)
         array = Helpers.to_a(array)

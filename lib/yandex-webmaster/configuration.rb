@@ -1,8 +1,11 @@
 # encoding: utf-8
 
+require 'singleton'
+
 module Yandex
   module Webmaster
     class Configuration
+      include Singleton
       
       VALID_OPTIONS_KEYS = [
         :adapter,
@@ -43,12 +46,15 @@ module Yandex
       # By default uses the Faraday connection options if none is set
       DEFAULT_CONNECTION_OPTIONS = {}
 
-      attr_accessor *VALID_OPTIONS_KEYS
+      attr_accessor *VALID_OPTIONS_KEYS, :options
 
-      def initialize(options = {})
-        raise ArgumentError if (Helpers.symbolize_hash_keys(options).keys - VALID_OPTIONS_KEYS).any?
-
+      def initialize()
         self.reset!
+      end
+      
+      def options=(options)
+        raise ArgumentError if (Helpers.symbolize_hash_keys(options).keys - VALID_OPTIONS_KEYS).any?
+        
         options.each { |k,v| send("#{k}=", v) }
       end
 
