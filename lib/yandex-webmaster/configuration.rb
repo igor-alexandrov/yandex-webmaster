@@ -1,11 +1,8 @@
 # encoding: utf-8
 
-require 'singleton'
-
 module Yandex
   module Webmaster
     class Configuration
-      include Singleton
       
       VALID_OPTIONS_KEYS = [
         :adapter,
@@ -14,9 +11,9 @@ module Yandex
         :oauth_token,
         :endpoint,
         :site,
-        :ssl,        
+        :ssl,
         :user_agent,
-        :connection_options        
+        :connection_options
       ].freeze
 
       # Other adapters are :typhoeus, :patron, :em_synchrony, :excon, :test
@@ -48,7 +45,7 @@ module Yandex
 
       attr_accessor *VALID_OPTIONS_KEYS
 
-      def initialize(options = {})        
+      def initialize(options = {})
         raise ArgumentError if (Helpers.symbolize_hash_keys(options).keys - VALID_OPTIONS_KEYS).any?
 
         self.reset!
@@ -74,18 +71,18 @@ module Yandex
         self.site               = DEFAULT_SITE
         self.ssl                = DEFAULT_SSL
         self.user_agent         = DEFAULT_USER_AGENT
-        self.connection_options = DEFAULT_CONNECTION_OPTIONS        
+        self.connection_options = DEFAULT_CONNECTION_OPTIONS
         self
-      end      
+      end
 
       # Convenience method to allow for global setting of configuration options
-      # 
+      #
       def configure
         yield self
       end
 
       # Responds to attribute query or attribute clear
-      # 
+      #
       def method_missing(method, *args, &block) # :nodoc:
         case method.to_s
         when /^(.*)\?$/

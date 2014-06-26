@@ -8,13 +8,9 @@ module Yandex
       extend self
 
       USER_AGENT = 'User-Agent'.freeze
-
       ACCEPT = 'Accept'.freeze
-
       ACCEPT_CHARSET = 'Accept-Charset'.freeze
-
       CONTENT_TYPE = 'Content-Type'.freeze
-
       ALLOWED_OPTIONS = [
         :headers,
         :url,
@@ -29,9 +25,9 @@ module Yandex
 
         options = self.connection_options(options)
         
-        if @connection_options != options        
+        if @connection_options != options
           @connection = nil
-          @connection_options = options          
+          @connection_options = options
         end
 
         @connection ||= Faraday.new(@connection_options.merge(:builder => self.stack))
@@ -43,9 +39,9 @@ module Yandex
         options.slice!(*ALLOWED_OPTIONS)
 
         {
-          :headers => {            
+          :headers => {
             ACCEPT_CHARSET   => "utf-8",
-            USER_AGENT       => Yandex::Webmaster::Configuration::DEFAULT_USER_AGENT,
+            USER_AGENT       => self.configuration.user_agent,
             # Due to error in Yandex.Webmaster API I had to change this header
             # http://clubs.ya.ru/webmaster-api/replies.xml?item_no=150
             # CONTENT_TYPE     => 'application/xml'
@@ -69,7 +65,7 @@ module Yandex
       # configuration stage.
       #
       def default_middleware
-        Proc.new do |builder|          
+        Proc.new do |builder|
           builder.use Faraday::Request::Multipart
           builder.use Faraday::Request::UrlEncoded
           builder.use Yandex::Webmaster::Request::OAuth2, self.configuration.oauth_token
@@ -80,7 +76,7 @@ module Yandex
           
           builder.adapter self.configuration.adapter
         end
-      end  
+      end
 
     end
   end
