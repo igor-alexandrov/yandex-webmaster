@@ -5,6 +5,8 @@ require 'singleton'
 module Yandex
   module Webmaster
     class Configuration
+      include Singleton
+      
       VALID_OPTIONS_KEYS = [
         :adapter,
         :app_id,
