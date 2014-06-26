@@ -45,7 +45,7 @@ module Yandex
         {
           :headers => {            
             ACCEPT_CHARSET   => "utf-8",
-            USER_AGENT       => Yandex::Webmaster::Configuration.user_agent,
+            USER_AGENT       => Yandex::Webmaster::Configuration::DEFAULT_USER_AGENT,
             # Due to error in Yandex.Webmaster API I had to change this header
             # http://clubs.ya.ru/webmaster-api/replies.xml?item_no=150
             # CONTENT_TYPE     => 'application/xml'
