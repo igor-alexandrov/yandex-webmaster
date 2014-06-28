@@ -40,8 +40,7 @@ module Yandex
       
       def connection_options(options = {})
         options.slice!(*ALLOWED_OPTIONS)
-        # binding.pry
-
+        
         {
           :headers => {
             ACCEPT_CHARSET   => "utf-8",
