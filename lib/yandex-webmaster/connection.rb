@@ -8,13 +8,9 @@ module Yandex
       extend self
 
       USER_AGENT = 'User-Agent'.freeze
-
       ACCEPT = 'Accept'.freeze
-
       ACCEPT_CHARSET = 'Accept-Charset'.freeze
-
       CONTENT_TYPE = 'Content-Type'.freeze
-
       ALLOWED_OPTIONS = [
         :headers,
         :url,
@@ -23,36 +19,40 @@ module Yandex
         :ssl
       ].freeze
 
-      # Returns a Fraday::Connection object
+      # Returns a Faraday::Connection object
       #
       def connection(options = {})
 
         options = self.connection_options(options)
         
-        if @connection_options != options        
+        if @connection_options != options
           @connection = nil
-          @connection_options = options          
+          @connection_options = options
         end
 
         @connection ||= Faraday.new(@connection_options.merge(:builder => self.stack))
       end
 
     protected
-        
+      def config
+        Yandex::Webmaster::Configuration.instance
+      end
+      
       def connection_options(options = {})
         options.slice!(*ALLOWED_OPTIONS)
-
+        
         {
-          :headers => {            
+          :headers => {
             ACCEPT_CHARSET   => "utf-8",
-            USER_AGENT       => self.configuration.user_agent,
+            USER_AGENT       => config.user_agent,
+            
             # Due to error in Yandex.Webmaster API I had to change this header
             # http://clubs.ya.ru/webmaster-api/replies.xml?item_no=150
             # CONTENT_TYPE     => 'application/xml'
             CONTENT_TYPE     => 'application/x-www-form-urlencoded'
           },
-          :ssl => options.fetch(:ssl) { self.configuration.ssl },
-          :url => options.fetch(:endpoint) { self.configuration.endpoint }
+          :ssl => options.fetch(:ssl) { config.ssl },
+          :url => options.fetch(:endpoint) { config.endpoint }
         }.merge(options)
       end
 
@@ -69,18 +69,18 @@ module Yandex
       # configuration stage.
       #
       def default_middleware
-        Proc.new do |builder|          
+        Proc.new do |builder|
           builder.use Faraday::Request::Multipart
           builder.use Faraday::Request::UrlEncoded
-          builder.use Yandex::Webmaster::Request::OAuth2, self.configuration.oauth_token
+          builder.use Yandex::Webmaster::Request::OAuth2, config.oauth_token
 
           builder.use Faraday::Response::Logger if ENV['DEBUG']
           builder.use Yandex::Webmaster::Response::Hashify
           # builder.use Yandex::Webmaster::Response::RaiseError
           
-          builder.adapter self.configuration.adapter
+          builder.adapter config.adapter
         end
-      end  
+      end
 
     end
   end

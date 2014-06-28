@@ -11,7 +11,7 @@ module Yandex
 
       def get_request(path, params={}, options={})
         request(:get, path, params, options)
-      end      
+      end
 
       def post_request(path, params={}, options={})
         request(:post, path, params, options)
@@ -42,12 +42,12 @@ module Yandex
           when *(METHODS - METHODS_WITH_BODIES)
             request.body = params.delete('data') if params.has_key?('data')
             request.url(path, params)
-          when *METHODS_WITH_BODIES            
-            request.url(path)            
-            request.body = self.extract_data_from_params(params) unless params.empty?            
+          when *METHODS_WITH_BODIES
+            request.url(path)
+            request.body = self.extract_data_from_params(params) unless params.empty?
             request.headers['Content-Length'] = request.body.size.to_s
           end
-        end        
+        end
       end
 
     protected
@@ -57,6 +57,6 @@ module Yandex
         return params[:data] if params.is_a?(Hash) && params.has_key?(:data) && !params[:data].nil?
         return params
       end
-    end    
+    end
   end
 end
